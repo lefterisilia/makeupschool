@@ -1,0 +1,201 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  makeupschool
+
+  Sample SAM Template for makeupschool
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+#Globals:
+
+
+Mappings:
+  Constants:
+    Defaults:
+      WebsiteBucketName: 'makeup-school-website-bucket'
+      WebsiteCloudfrontTTL: 60
+
+Resources:
+  ContactFormFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: contactLambda/
+      Handler: contact.handler
+      Runtime: nodejs22.x
+      Timeout: 5
+      Events:
+        ContactApi:
+          Type: Api
+          Properties:
+            Path: /api/contact
+            Method: POST
+      Environment:
+        Variables:
+          TO_EMAIL: "makeupschoolbyelenaenglezou@gmail.com"
+          GMAIL_USER: "testreactnative72@gmail.com"
+          GMAIL_PASS: "{{resolve:ssm:/makeupschool/gmail/pass}}"
+          ALLOWED_ORIGIN: "https://d6e2p6mojn8wd.cloudfront.net"
+
+  ResponseHeadersPolicy:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: WebSecurity-Headers-Policy
+        Comment: Common web security response headers
+        CorsConfig:
+          AccessControlAllowCredentials: false
+          AccessControlAllowHeaders:
+            Items:
+              - "*"
+          AccessControlAllowMethods:
+            Items:
+              - GET
+              - HEAD
+          AccessControlAllowOrigins:
+            Items:
+              - "*"
+          AccessControlExposeHeaders:
+            Items:
+              - "*"
+          OriginOverride: true
+
+  ResponseHeadersPolicyAPI:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: API-WebSecurity-Headers-Policy
+        Comment: "Security headers"
+        CorsConfig:
+          AccessControlAllowHeaders:
+            Items:
+              - "*"
+          AccessControlAllowMethods:
+            Items:
+              - GET
+              - HEAD
+              - OPTIONS
+              - POST
+          AccessControlAllowCredentials: false
+          AccessControlAllowOrigins:
+            Items:
+              - "*"
+          AccessControlExposeHeaders:
+            Items:
+              - "*"
+          OriginOverride: true
+
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !FindInMap [ Constants, Defaults, WebsiteBucketName ]
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins: [ "*" ]
+            AllowedMethods:
+              - GET
+              - HEAD
+            AllowedHeaders:
+              - "*"
+            MaxAge: 600
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: 404.html
+
+  WebsiteCloudFrontOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: OriginAccessIdentity for Bucket
+
+  WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref WebsiteBucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              CanonicalUser: !GetAtt WebsiteCloudFrontOriginAccessIdentity.S3CanonicalUserId
+            Action: s3:GetObject
+            Resource: !Join [ "", [ "arn:aws:s3:::", !FindInMap [ Constants, Defaults, WebsiteBucketName ], "/*" ] ]
+
+  WebsiteCloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        DefaultRootObject: index.html
+        CustomErrorResponses:
+          - ErrorCachingMinTTL: !FindInMap [ Constants, Defaults, WebsiteCloudfrontTTL ]
+            ErrorCode: 403
+            ResponseCode: 404
+            ResponsePagePath: "/404.html"
+        HttpVersion: http2
+        Origins:
+          - Id: WebsiteOrigin
+            DomainName: !GetAtt WebsiteBucket.DomainName
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${WebsiteCloudFrontOriginAccessIdentity}"
+          - Id: ApiOrigin
+            DomainName: !Sub "${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com"
+            OriginPath: "/Prod"
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+        CacheBehaviors:
+          - PathPattern: "/api/*"
+            TargetOriginId: ApiOrigin
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [HEAD, DELETE, POST, GET, OPTIONS, PUT, PATCH]
+            ForwardedValues:
+              QueryString: true
+              Headers:
+                - "Authorization"
+            Compress: true
+            ResponseHeadersPolicyId: !Ref ResponseHeadersPolicyAPI
+        DefaultCacheBehavior:
+          ResponseHeadersPolicyId: !Ref ResponseHeadersPolicy
+          Compress: true
+          TargetOriginId: WebsiteOrigin
+          ForwardedValues:
+            QueryString: true
+            QueryStringCacheKeys:
+              - ver
+            Cookies:
+              Forward: none
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - HEAD
+            - GET
+          DefaultTTL: !FindInMap [ Constants, Defaults, WebsiteCloudfrontTTL ]
+          MinTTL: !FindInMap [ Constants, Defaults, WebsiteCloudfrontTTL ]
+          MaxTTL: 86400
+        Enabled: true
+        PriceClass: PriceClass_100
+
+
+#        Aliases:
+#          - 'example.com'
+#        ViewerCertificate:
+#          MinimumProtocolVersion: TLSv1.2_2021
+#          SslSupportMethod: sni-only
+#          AcmCertificateArn: !Sub "{{resolve:ssm:/pishys/acm_certificate_arn:1}}"
+
+#  WebsiteDNSRecord:
+#    Type: AWS::Route53::RecordSet
+#    Properties:
+#      HostedZoneId: !Sub "{{resolve:ssm:/pishys/hosted_zone_id:1}}"
+#      Name: 'example.com' # Replace with your domain name
+#      Type: A
+#      AliasTarget:
+#        DNSName: !GetAtt WebsiteCloudFrontDistribution.DomainName
+#        HostedZoneId: !Sub "{{resolve:ssm:/pishys/hosted_zone_id:1}}" # Replace with actual CloudFront hosted zone ID
+
+Outputs:
+  CloudFrontURL:
+    Description: CloudFront Distribution URL
+    Value: !Sub "https://${WebsiteCloudFrontDistribution.DomainName}"
+    Export:
+      Name: OutputOfCloudFrontURL
+
+  ApiEndpoint:
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/api/contact"
+    Description: Lambda API Endpoin

@@ -20,7 +20,7 @@
                 <ul class="nav-list">
                     <li><a href="#about" class="nav-link">About</a></li>
                     <li><a href="#photos" class="nav-link">Photos</a></li>
-                    <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
+                    <li><a href="#portfolio" class="nav-link">Courses</a></li>
                     <li><a href="#contacts" class="nav-link">Contact</a></li>
                 </ul>
             </div>
@@ -152,20 +152,35 @@
 <!-- Contacts Section -->
 <section id="contacts" class="section-container">
     <h2 class="section-title">Contact</h2>
+    <div class="contact-flex">
     <form id="contact-form" class="contact-form">
-        <input class="form-input" type="text" placeholder="Your Name" required />
-        <input class="form-input" type="email" placeholder="Your Email" required />
-        <input class="form-input" type="text" placeholder="Phone Number" required />
-        <select class="form-select" required>
+        <input class="form-input" type="text" name="name" placeholder="Your Name" required />
+        <input class="form-input" type="email" name="email" placeholder="Your Email" required />
+        <input class="form-input" type="text" name="phone" placeholder="Phone Number" required />
+        <select class="form-select" name="subject" required>
             <option value="" disabled selected>Select Subject</option>
             <option>Beginners</option>
             <option>Professional Course</option>
             <option>Private Lessons</option>
         </select>
-        <textarea class="form-textarea" placeholder="Your Message" required></textarea>
+        <textarea class="form-textarea" name="message" placeholder="Your Message" required></textarea>
         <button class="form-button" type="submit">Send Message</button>
     </form>
+    <div class="contact-info">
+        <h3>Contact Information</h3>
+        <p>Email: elena@example.com</p>
+        <p>Phone: +357 99 123456</p>
+        <p>Address: 123 Beauty St, Nicosia, Cyprus</p>
+        <p>Follow us:</p>
+        <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Facebook</a></li>
+        </ul>
+    </div>
+    </div>
+    <p id="form-response" style="margin-top: 1em; font-weight: bold; color:floralwhite;"></p>
 </section>
+
 
 <script src="scripts.js"></script>
 </body>

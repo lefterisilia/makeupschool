@@ -100,7 +100,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 270px;
+    height: 200px;
     background: transparent;
     box-shadow: none;
     transition: background 0.3s, box-shadow 0.1s;
@@ -108,11 +108,15 @@ body {
     display: flex;
     align-items: center;
 }
+#navbar.hide {
+    transform: translateY(-100%);
+    transition: transform 0.3s;
+}
 #navbar.scrolled {
     background: rgba(24, 24, 27, 0.95);
     box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    transition: background 0.3s, box-shadow 0.1s;
 }
-
 .navbar-container {
     display: flex;
     justify-content: space-between;
@@ -124,6 +128,52 @@ body {
     height: 80px;
     gap: 2rem; /* Adjust this value for more or less space */
 
+}
+.contact-flex {
+    display: flex;
+    gap: 2em;
+    flex-wrap: wrap;
+}
+
+.contact-form, .contact-info {
+    flex: 1 1 300px;
+    background: rgba(0,0,0,0.2);
+    padding: 2em;
+    border-radius: 10px;
+}
+.contact-info {
+    flex: 1 1 300px;
+    background: rgba(39,39,42,0.92);
+    padding: 1em 1.5em;
+    border-radius: 1rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    color: #d1d5db;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.4em;
+}
+
+.contact-info h3 {
+    color: #fff;
+    margin-bottom: 0.1em;
+}
+
+.contact-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.1em 0 0 0;
+}
+
+.contact-info ul li a {
+    color: #a5b4fc;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.contact-info ul li a:hover {
+    color: #fff;
 }
 
 .nav-list {
@@ -207,7 +257,7 @@ body {
 }
 .course-description{
     text-align: center;
-    color: #2974ff;
+    color: #ff0032;
     font-size: 1.2rem;
 }
 
@@ -243,7 +293,7 @@ body {
     cursor: pointer;
 }
 .logoPick {
-    width: 280px;
+    width: 180px;
     height: auto;
     margin-left: -100px;
     margin-top: 20px;
@@ -274,13 +324,20 @@ body {
     .side-by-side {
         flex-direction: column;
         align-items: center;
+        gap: 0.5rem;
         text-align: center;
     }
     .about-text {
         text-align: center;
     }
+    .about-image{
+        max-width: 100%;
+        width: 100%;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
     .photo-gallery img:hover {
-        transform: scale(2);
+        transform: scale(1.2);
     }
     .nav-list {
         flex-direction: column;
@@ -299,12 +356,17 @@ body {
         height: 110px;
     }
     #navbar {
-        height: 100px;
+        height: 80px;
         background: rgba(30, 30, 34, 0.75);
         box-shadow: 0 4px 24px rgba(0,0,0,0.18);
         border-radius: 0 0 1.5rem 1.5rem;
         backdrop-filter: blur(8px);
     }
+    #navbar.scrolled {
+            background: #18181b;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    }
+
     .navbar-container {
         height: 70px;
         padding: 0 1.5rem;

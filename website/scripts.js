@@ -106,13 +106,11 @@ document.addEventListener('click', event => {
     }
 });
 
-// Scroll to the hero section when the logo is clicked
+// Scroll to the top when the logo is clicked
 document.getElementById('logo').addEventListener('click', e => {
     e.preventDefault();
-    const heroContent = document.querySelector('.hero-content');
-    const navbarHeight = document.getElementById('navbar').offsetHeight;
     window.scrollTo({
-        top: heroContent.offsetTop - navbarHeight,
+        top: 0,
         behavior: 'smooth'
     });
 });
@@ -132,4 +130,65 @@ window.addEventListener('scroll', function() {
     } else {
         navbar.classList.remove('scrolled');
     }
+});
+
+
+    // Contact form submission
+document.getElementById('contact-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+
+    const data = {
+        name: form.name.value,
+        email: form.email.value,
+        phone: form.phone.value,
+        subject: form.subject.value,
+        message: form.message.value,
+    };
+
+    const responseBox = document.getElementById('form-response');
+    responseBox.textContent = "Sending...";
+
+    try {
+        const response = await fetch('https://d6e2p6mojn8wd.cloudfront.net/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+
+        const result = await response.json();
+
+        if (response.ok) {
+            responseBox.textContent = "✅ Message sent successfully!";
+            form.reset();
+        } else {
+            responseBox.textContent = `❌ Error: ${result.error || 'Something went wrong.'}`;
+        }
+    } catch (error) {
+        console.error("Form submission failed:", error);
+        responseBox.textContent = "❌ Network error. Please try again later.";
+    }
+    let lastScrollY = window.scrollY;
+    const navbar = document.getElementById('navbar');
+    let scrollTimeout;
+
+    window.addEventListener('scroll', () => {
+        clearTimeout(scrollTimeout);
+
+        if (window.scrollY > lastScrollY) {
+            // Scrolling down: hide navbar
+            navbar.classList.add('hide');
+        } else {
+            // Scrolling up: show navbar
+            navbar.classList.remove('hide');
+        }
+        lastScrollY = window.scrollY;
+
+        // When scrolling stops, show navbar
+        scrollTimeout = setTimeout(() => {
+            navbar.classList.remove('hide');
+        }, 150);
+    });
 });
