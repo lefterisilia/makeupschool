@@ -166,21 +166,74 @@
         <textarea class="form-textarea" name="message" placeholder="Your Message" required></textarea>
         <button class="form-button" type="submit">Send Message</button>
     </form>
-    <div class="contact-info">
-        <h3>Contact Information</h3>
-        <p>Email: elena@example.com</p>
-        <p>Phone: +357 99 123456</p>
-        <p>Address: 123 Beauty St, Nicosia, Cyprus</p>
-        <p>Follow us:</p>
-        <ul>
-            <li><a href="#">Instagram</a></li>
-            <li><a href="#">Facebook</a></li>
-        </ul>
-    </div>
+                <div class="contact-card">
+                    <header class="contact-head">
+                        <h3>Contact Information</h3>
+                        <p>Reach out for courses, private lessons, or collaborations.</p>
+                    </header>
+
+                    <ul class="contact-list">
+                        <li class="contact-row">
+              <span class="contact-icon" aria-hidden="true">
+                <!-- Mail -->
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
+              </span>
+                            <div class="contact-text">
+                                <span class="label">Email</span>
+                                <a class="value" href="mailto:makeupschoolbyelenaenglezou@gmail.com">makeupschoolbyelenaenglezou@gmail.com</a>
+                            </div>
+                        </li>
+
+                        <li class="contact-row">
+              <span class="contact-icon" aria-hidden="true">
+                <!-- Phone -->
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.6 10.8a15.05 15.05 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.3 21 3 13.7 3 4a1 1 0 0 1 1-1h3.47a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.25 1.02L6.6 10.8Z"/></svg>
+              </span>
+                            <div class="contact-text">
+                                <span class="label">Phone</span>
+                                <a class="value" href="tel:+35799966464">+357 99 966464</a>
+                            </div>
+                        </li>
+
+                        <li class="contact-row">
+              <span class="contact-icon" aria-hidden="true">
+                <!-- Pin -->
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z"/></svg>
+              </span>
+                            <div class="contact-text">
+                                <span class="label">Address</span>
+                                <a class="value" href="https://www.google.com/maps/place/Makeup+School+by+Elena+Englezou/@34.7723548,32.4294558,20.06z/data=!4m6!3m5!1s0x14e7079a8373d8b1:0x7ce46dc891e1d74!8m2!3d34.772143!4d32.4294453!16s%2Fg%2F11vkhzm2y1?hl=en-GB&entry=ttu&g_ep=EgoyMDI1MDgxMC4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">Misiaouli kai Kavazoglou 3b, Paphos 8011</a>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="social-links">
+                        <a class="social" href="https://www.instagram.com/makeupschoolbyelenaenglezou/" target="_blank" rel="noopener" aria-label="Instagram">
+                            <!-- Instagram -->
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm6.5-.75a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z"/></svg>
+                            <span>Instagram</span>
+                        </a>
+                        <a class="social" href="https://www.facebook.com/elenaenglezoumakeupartist/" target="_blank" rel="noopener" aria-label="Facebook">
+                            <!-- Facebook -->
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M13 9h3V6h-3a4 4 0 0 0-4 4v2H7v3h2v7h3v-7h3l1-3h-4v-2a1 1 0 0 1 1-1Z"/></svg>
+                            <span>Facebook</span>
+                        </a>
+                    </div>
+                </div>
     </div>
     <p id="form-response" style="margin-top: 1em; font-weight: bold; color:floralwhite;"></p>
 </section>
-
+<footer class="site-footer">
+    <div class="footer-container">
+        <p>&copy; <span id="year"></span> Make Up School by Elena Englezou</p>
+        <p class="footer-credit">
+            Website created by
+            <a href="https://github.com/lefterisilia" target="_blank" rel="noopener">
+                Lefteris Ilia
+            </a>
+        </p>
+    </div>
+</footer>
 
 <script src="scripts.js"></script>
 </body>
