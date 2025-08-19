@@ -7,6 +7,33 @@ body {
     background: #18181b;
     background-attachment: fixed;
 }
+/* --- Collapsible Photos (show first 3 rows, then expand) --- */
+.photos-viewport {
+    overflow: hidden;
+    max-height: var(--photos-collapsed-max, 0px);
+    transition: max-height 400ms cubic-bezier(.2,.8,.2,1);
+    will-change: max-height;
+}
+
+/* When expanded, lift the clamp */
+.photos-expanded .photos-viewport {
+    max-height: none;
+}
+
+/* Footer button (sits at the end under the gallery) */
+.photos-footer-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    margin-top: 1rem;
+    padding: .35rem .6rem;
+    border-radius: .6rem;
+    background: rgba(255,255,255,.06);
+    border: none;
+    cursor: pointer;
+}
+.photos-footer-toggle:hover { background: rgba(255,255,255,.12); }
+
 .side-by-side {
     display: flex;
     align-items: center;
@@ -336,9 +363,13 @@ body {
     text-align: center;
     padding: 2.5rem 2rem;
     margin: 4rem auto;
-    max-width: 1500px;
+    max-width: 1670px;
 }
 
+/* Arrow rotation */
+.portfolio-card.expanded .arrow {
+    transform: rotate(180deg);
+}
 .section-title {
     font-size: 2rem;
     color: #fff;
@@ -375,26 +406,74 @@ body {
     gap: 2rem;
     justify-content: center;
 }
+#toggle-all {
+    display: inline-flex;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+.portfolio-card .toggle-btn.card-toggle {
+    display: none;
+}
+
 
 .portfolio-card {
+    transition: box-shadow 220ms ease, transform 220ms ease;
     background: #18181b;
     border-radius: 0.75rem;
     padding: 1.5rem;
-    transition: transform 0.2s;
+    position: relative;
+    overflow: hidden;
     width: 260px;
 }
 
 .portfolio-card:hover {
     transform: translateY(-6px);
 }
+.card-details {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-6px);
+    overflow: hidden;
+    transition:
+            max-height 400ms cubic-bezier(.2,.8,.2,1),
+            opacity 260ms ease,
+            transform 260ms ease;
+    will-change: max-height, transform, opacity;
+}
+.portfolio-card.expanded .card-details {
+    max-height: var(--details-max, 1200px);
+    opacity: 1;
+    transform: translateY(0);
+}
+.portfolio-card.expanded {
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    transform: translateY(-4px);
+}
+
+/* Arrow rotation */
+.portfolio-card .arrow { display: inline-block; transition: transform 300ms ease; }
+.portfolio-card.expanded .arrow { transform: rotate(180deg); }
+
+/* Make the toggle button align nicely */
+.toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 1rem;
+    gap: .4rem;
+    padding: .35rem .6rem;
+    border-radius: .5rem;
+    background: rgba(255,255,255,.06);
+}
+.toggle-btn:hover { background: rgba(255,255,255,.12); }
+
 .course-description{
     text-align: center;
-    color: #ff0032;
+    color: #818cf8;
     font-size: 1.2rem;
 }
 
 .portfolio-card-title {
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     color: #fff;
 }
 
@@ -464,6 +543,10 @@ body {
     .nav-links-container.open {
         animation: slideDown 0.4s cubic-bezier(0.4,0,0.2,1);
     }
+
+    #toggle-all { display: none; }
+    .portfolio-card .toggle-btn.card-toggle { display: inline-flex; }
+
     @keyframes slideDown {
         from {
             opacity: 0;

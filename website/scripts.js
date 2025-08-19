@@ -1,3 +1,197 @@
+// --- Photos "Show more" (first 3 rows, then expand all) ---
+(() => {
+    const photosSection = document.querySelector('#photos');
+    const gallery = document.getElementById('photoGallery');
+    const btn = document.getElementById('photos-toggle');
+    if (!photosSection || !gallery || !btn) return;
+
+    // Wrap gallery so we can clamp height cleanly
+    const viewport = document.createElement('div');
+    viewport.className = 'photos-viewport';
+    gallery.parentNode.insertBefore(viewport, gallery);
+    viewport.appendChild(gallery);
+
+    // Helper: compute collapsed height = bottom of 3rd row
+// Helper: compute collapsed height = bottom of 3rd row
+// Helper: compute collapsed height = height of first 12 items
+    const computeCollapsedMax = () => {
+        const items = Array.from(gallery.children);
+        if (items.length <= 12) return Infinity; // nothing to clamp
+
+        // Measure from first photo top to 12th photo bottom
+        const first = items[0];
+        const twelfth = items[11];
+        const top = first.offsetTop;
+        const bottom = twelfth.offsetTop + twelfth.offsetHeight;
+
+        return bottom - top;
+    };
+
+
+
+    // Apply measured height to CSS var
+    const setCollapsedMaxVar = () => {
+        const h = computeCollapsedMax();
+        const value = (h === Infinity) ? 'none' : `${h}px`;
+        photosSection.style.setProperty('--photos-collapsed-max', value);
+    };
+
+    // Initial: collapsed (show 3 rows)
+    photosSection.classList.remove('photos-expanded');
+    setCollapsedMaxVar();
+    btn.setAttribute('aria-expanded', 'false');
+    btn.textContent = '▼ Εμφάνιση περισσοτέρων';
+
+    // Toggle expand/collapse
+    const toggle = () => {
+        const expanded = photosSection.classList.toggle('photos-expanded');
+        if (!expanded) {
+            // Re-apply clamp on collapse
+            setCollapsedMaxVar();
+            btn.setAttribute('aria-expanded', 'false');
+            btn.textContent = '▼ Εμφάνιση περισσοτέρων';
+        } else {
+            btn.setAttribute('aria-expanded', 'true');
+            btn.textContent = '▲ Εμφάνιση λιγότερων';
+        }
+    };
+
+    btn.addEventListener('click', toggle);
+
+    // Recompute when images load or on resize (lazy images may change heights)
+    const ro = new ResizeObserver(() => setCollapsedMaxVar());
+    ro.observe(gallery);
+    window.addEventListener('resize', setCollapsedMaxVar);
+
+    // If images are still loading, recalc after each
+    const imgs = gallery.querySelectorAll('img');
+    imgs.forEach(img => {
+        if (!img.complete) {
+            img.addEventListener('load', setCollapsedMaxVar, { once: true });
+            img.addEventListener('error', setCollapsedMaxVar, { once: true });
+        }
+    });
+})();
+
+
+
+/// minimazi and expand courses
+document.addEventListener("DOMContentLoaded", () => {
+    const cards = document.querySelectorAll(".portfolio-card");
+    const toggleAllBtn = document.querySelector("#toggle-all");
+
+    // Helper: wrap all siblings after a node into a wrapper
+    const wrapSiblingsAfter = (startEl, wrapperClass) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = wrapperClass;
+        let node = startEl.nextSibling;
+        startEl.parentNode.insertBefore(wrapper, node);
+        while (node) {
+            const next = node.nextSibling;
+            wrapper.appendChild(node);
+            node = next;
+        }
+        return wrapper;
+    };
+
+    // Helper: measure content height and store as CSS var
+    const setDetailsMax = (details, card) => {
+        const isCollapsed = !card.classList.contains("expanded");
+        if (isCollapsed) {
+            details.style.maxHeight = "none";
+            details.style.opacity = "0";
+            details.style.transform = "translateY(-6px)";
+        }
+        const h = details.scrollHeight;
+        details.style.removeProperty("opacity");
+        details.style.removeProperty("transform");
+        details.style.setProperty("--details-max", `${h}px`);
+        if (isCollapsed) details.style.maxHeight = "";
+    };
+
+    // Initialize each card
+    cards.forEach(card => {
+        const desc = card.querySelector(".portfolio-card-description");
+
+        // Create per-card toggle (top arrow)
+        let cardBtn = card.querySelector(".toggle-btn.card-toggle");
+        if (!cardBtn) {
+            cardBtn = document.createElement("button");
+            cardBtn.className = "toggle-btn card-toggle";
+            cardBtn.type = "button";
+            cardBtn.innerHTML = `<span class="arrow">▼</span>`;
+            desc.insertAdjacentElement("afterend", cardBtn);
+        }
+
+        // Wrap rest of content
+        const details = wrapSiblingsAfter(cardBtn, "card-details");
+        card._details = details;
+
+        // Add footer toggle (appears only when expanded on mobile)
+        let footerBtn = document.createElement("button");
+        footerBtn.className = "toggle-btn card-footer-toggle";
+        footerBtn.type = "button";
+        footerBtn.textContent = "▲";
+        details.appendChild(footerBtn);
+
+        // Toggle function (shared)
+        const toggleCard = () => {
+            const expanding = !card.classList.contains("expanded");
+            if (expanding) {
+                setDetailsMax(details, card);
+                details.offsetHeight;
+                card.classList.add("expanded");
+            } else {
+                details.style.maxHeight = `${details.scrollHeight}px`;
+                details.offsetHeight;
+                card.classList.remove("expanded");
+                requestAnimationFrame(() => (details.style.maxHeight = ""));
+            }
+        };
+
+        cardBtn.addEventListener("click", toggleCard);
+        footerBtn.addEventListener("click", toggleCard);
+
+        // Start collapsed
+        card.classList.remove("expanded");
+        setDetailsMax(details, card);
+    });
+
+    // Global toggle (desktop)
+    if (toggleAllBtn) {
+        let allExpanded = false;
+        toggleAllBtn.addEventListener("click", () => {
+            allExpanded = !allExpanded;
+            toggleAllBtn.setAttribute("aria-expanded", String(allExpanded));
+            const arrow = toggleAllBtn.querySelector(".arrow");
+            if (arrow) arrow.style.transform = allExpanded ? "rotate(180deg)" : "rotate(0deg)";
+
+            cards.forEach(card => {
+                const details = card._details;
+                setDetailsMax(details, card);
+                if (allExpanded) {
+                    details.offsetHeight;
+                    card.classList.add("expanded");
+                    const btn = card.querySelector(".toggle-btn.card-toggle");
+                    if (btn) btn.setAttribute("aria-expanded", "true");
+                } else {
+                    details.style.maxHeight = `${details.scrollHeight}px`;
+                    details.offsetHeight;
+                    card.classList.remove("expanded");
+                    requestAnimationFrame(() => (details.style.maxHeight = ""));
+                    const btn = card.querySelector(".toggle-btn.card-toggle");
+                    if (btn) btn.setAttribute("aria-expanded", "false");
+                }
+            });
+        });
+    }
+
+    // Recompute heights on resize (for responsiveness)
+    window.addEventListener("resize", () => {
+        cards.forEach(card => setDetailsMax(card._details, card));
+    });
+});
+
 // Image Gallery
 const imageNames = [
     '436550293_1633480520827504_3293965988730784078_n.webp',
