@@ -1,3 +1,55 @@
+function closeModalAndRedirect() {
+    // Close modal (assuming modal is shown with some class or style)
+    document.getElementById("course-modal").style.display = "none";
+    document.body.style.overflow = ""; // Restore scrolling
+    // Redirect to contacts section
+    location.href = "#contacts";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("course-modal");
+    const modalBody = document.getElementById("modal-body");
+    const modalClose = document.getElementById("modal-close");
+    const cards = document.querySelectorAll(".portfolio-card");
+
+    // Ensure all cards start minimized (no expanded class needed)
+    cards.forEach(card => {
+        card.addEventListener("click", (e) => {
+            // Prevent modal from opening if clicking a link or button
+            if (e.target.tagName === "A" || e.target.tagName === "BUTTON") {
+                return;
+            }
+
+            // Clone card content for modal
+            modalBody.innerHTML = card.innerHTML;
+            modal.style.display = "flex";
+            document.body.style.overflow = "hidden"; // Prevent background scroll
+        });
+    });
+
+    // Close modal when clicking the close button
+    modalClose.addEventListener("click", () => {
+        modal.style.display = "none";
+        document.body.style.overflow = ""; // Restore scrolling
+    });
+
+    // Close modal when clicking outside content
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+            document.body.style.overflow = ""; // Restore scrolling
+        }
+    });
+
+    // Close modal with Escape key for accessibility
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.style.display === "flex") {
+            modal.style.display = "none";
+            document.body.style.overflow = ""; // Restore scrolling
+        }
+    });
+});
+
 // --- Photos "Show more" (first 3 rows, then expand all) ---
 (() => {
     const photosSection = document.querySelector('#photos');
@@ -75,122 +127,121 @@
 
 
 
-/// minimazi and expand courses
-document.addEventListener("DOMContentLoaded", () => {
-    const cards = document.querySelectorAll(".portfolio-card");
-    const toggleAllBtn = document.querySelector("#toggle-all");
-
-    // Helper: wrap all siblings after a node into a wrapper
-    const wrapSiblingsAfter = (startEl, wrapperClass) => {
-        const wrapper = document.createElement("div");
-        wrapper.className = wrapperClass;
-        let node = startEl.nextSibling;
-        startEl.parentNode.insertBefore(wrapper, node);
-        while (node) {
-            const next = node.nextSibling;
-            wrapper.appendChild(node);
-            node = next;
-        }
-        return wrapper;
-    };
-
-    // Helper: measure content height and store as CSS var
-    const setDetailsMax = (details, card) => {
-        const isCollapsed = !card.classList.contains("expanded");
-        if (isCollapsed) {
-            details.style.maxHeight = "none";
-            details.style.opacity = "0";
-            details.style.transform = "translateY(-6px)";
-        }
-        const h = details.scrollHeight;
-        details.style.removeProperty("opacity");
-        details.style.removeProperty("transform");
-        details.style.setProperty("--details-max", `${h}px`);
-        if (isCollapsed) details.style.maxHeight = "";
-    };
-
-    // Initialize each card
-    cards.forEach(card => {
-        const desc = card.querySelector(".portfolio-card-description");
-
-        // Create per-card toggle (top arrow)
-        let cardBtn = card.querySelector(".toggle-btn.card-toggle");
-        if (!cardBtn) {
-            cardBtn = document.createElement("button");
-            cardBtn.className = "toggle-btn card-toggle";
-            cardBtn.type = "button";
-            cardBtn.innerHTML = `<span class="arrow">▼</span>`;
-            desc.insertAdjacentElement("afterend", cardBtn);
-        }
-
-        // Wrap rest of content
-        const details = wrapSiblingsAfter(cardBtn, "card-details");
-        card._details = details;
-
-        // Add footer toggle (appears only when expanded on mobile)
-        let footerBtn = document.createElement("button");
-        footerBtn.className = "toggle-btn card-footer-toggle";
-        footerBtn.type = "button";
-        footerBtn.textContent = "▲";
-        details.appendChild(footerBtn);
-
-        // Toggle function (shared)
-        const toggleCard = () => {
-            const expanding = !card.classList.contains("expanded");
-            if (expanding) {
-                setDetailsMax(details, card);
-                details.offsetHeight;
-                card.classList.add("expanded");
-            } else {
-                details.style.maxHeight = `${details.scrollHeight}px`;
-                details.offsetHeight;
-                card.classList.remove("expanded");
-                requestAnimationFrame(() => (details.style.maxHeight = ""));
-            }
-        };
-
-        cardBtn.addEventListener("click", toggleCard);
-        footerBtn.addEventListener("click", toggleCard);
-
-        // Start collapsed
-        card.classList.remove("expanded");
-        setDetailsMax(details, card);
-    });
-
-    // Global toggle (desktop)
-    if (toggleAllBtn) {
-        let allExpanded = false;
-        toggleAllBtn.addEventListener("click", () => {
-            allExpanded = !allExpanded;
-            toggleAllBtn.setAttribute("aria-expanded", String(allExpanded));
-            const arrow = toggleAllBtn.querySelector(".arrow");
-            if (arrow) arrow.style.transform = allExpanded ? "rotate(180deg)" : "rotate(0deg)";
-
-            cards.forEach(card => {
-                const details = card._details;
-                setDetailsMax(details, card);
-                if (allExpanded) {
-                    details.offsetHeight;
-                    card.classList.add("expanded");
-                    const btn = card.querySelector(".toggle-btn.card-toggle");
-                    if (btn) btn.setAttribute("aria-expanded", "true");
-                } else {
-                    details.style.maxHeight = `${details.scrollHeight}px`;
-                    details.offsetHeight;
-                    card.classList.remove("expanded");
-                    requestAnimationFrame(() => (details.style.maxHeight = ""));
-                    const btn = card.querySelector(".toggle-btn.card-toggle");
-                    if (btn) btn.setAttribute("aria-expanded", "false");
-                }
-            });
-        });
-    }
-
-    // Recompute heights on resize (for responsiveness)
-    window.addEventListener("resize", () => {
-        cards.forEach(card => setDetailsMax(card._details, card));
-    });
-});
+// // minimazi and expand courses
+// document.addEventListener("DOMContentLoaded", () => {
+//     const cards = document.querySelectorAll(".portfolio-card");
+//     const toggleAllBtn = document.querySelector("#toggle-all");
+//
+//     // Helper: wrap all siblings after a node into a wrapper
+//     const wrapSiblingsAfter = (startEl, wrapperClass) => {
+//         const wrapper = document.createElement("div");
+//         wrapper.className = wrapperClass;
+//         let node = startEl.nextSibling;
+//         startEl.parentNode.insertBefore(wrapper, node);
+//         while (node) {
+//             const next = node.nextSibling;
+//             wrapper.appendChild(node);
+//             node = next;
+//         }
+//         return wrapper;
+//     };
+//
+//     // Helper: measure content height and store as CSS var
+//     const setDetailsMax = (details, card) => {
+//         const isCollapsed = !card.classList.contains("expanded");
+//         if (isCollapsed) {
+//             details.style.maxHeight = "none";
+//             details.style.opacity = "0";
+//             details.style.transform = "translateY(-6px)";
+//         }
+//         const h = details.scrollHeight;
+//         details.style.removeProperty("opacity");
+//         details.style.removeProperty("transform");
+//         details.style.setProperty("--details-max", `${h}px`);
+//         if (isCollapsed) details.style.maxHeight = "";
+//     };
+//
+//     // Initialize each card
+//     cards.forEach(card => {
+//         const desc = card.querySelector(".portfolio-card-description");
+//
+//         // Create per-card toggle (top arrow)
+//         let cardBtn = card.querySelector(".toggle-btn.card-toggle");
+//         if (!cardBtn) {
+//             cardBtn = document.createElement("button");
+//             cardBtn.className = "toggle-btn card-toggle";
+//             cardBtn.type = "button";
+//             cardBtn.innerHTML = `<span class="arrow">▼</span>`;
+//             desc.insertAdjacentElement("afterend", cardBtn);
+//         }
+//
+//         // Wrap rest of content
+//         const details = wrapSiblingsAfter(cardBtn, "card-details");
+//         card._details = details;
+//
+//         // Add footer toggle (appears only when expanded on mobile)
+//         let footerBtn = document.createElement("button");
+//         footerBtn.className = "toggle-btn card-footer-toggle";
+//         footerBtn.type = "button";
+//         details.appendChild(footerBtn);
+//
+//         // Toggle function (shared)
+//         const toggleCard = () => {
+//             const expanding = !card.classList.contains("expanded");
+//             if (expanding) {
+//                 setDetailsMax(details, card);
+//                 details.offsetHeight;
+//                 card.classList.add("expanded");
+//             } else {
+//                 details.style.maxHeight = `${details.scrollHeight}px`;
+//                 details.offsetHeight;
+//                 card.classList.remove("expanded");
+//                 requestAnimationFrame(() => (details.style.maxHeight = ""));
+//             }
+//         };
+//
+//         cardBtn.addEventListener("click", toggleCard);
+//         footerBtn.addEventListener("click", toggleCard);
+//
+//         // Start collapsed
+//         card.classList.remove("expanded");
+//         setDetailsMax(details, card);
+//     });
+//
+//     // Global toggle (desktop)
+//     if (toggleAllBtn) {
+//         let allExpanded = false;
+//         toggleAllBtn.addEventListener("click", () => {
+//             allExpanded = !allExpanded;
+//             toggleAllBtn.setAttribute("aria-expanded", String(allExpanded));
+//             const arrow = toggleAllBtn.querySelector(".arrow");
+//             if (arrow) arrow.style.transform = allExpanded ? "rotate(180deg)" : "rotate(0deg)";
+//
+//             cards.forEach(card => {
+//                 const details = card._details;
+//                 setDetailsMax(details, card);
+//                 if (allExpanded) {
+//                     details.offsetHeight;
+//                     card.classList.add("expanded");
+//                     const btn = card.querySelector(".toggle-btn.card-toggle");
+//                     if (btn) btn.setAttribute("aria-expanded", "true");
+//                 } else {
+//                     details.style.maxHeight = `${details.scrollHeight}px`;
+//                     details.offsetHeight;
+//                     card.classList.remove("expanded");
+//                     requestAnimationFrame(() => (details.style.maxHeight = ""));
+//                     const btn = card.querySelector(".toggle-btn.card-toggle");
+//                     if (btn) btn.setAttribute("aria-expanded", "false");
+//                 }
+//             });
+//         });
+//     }
+//
+//     // Recompute heights on resize (for responsiveness)
+//     window.addEventListener("resize", () => {
+//         cards.forEach(card => setDetailsMax(card._details, card));
+//     });
+// });
 
 // Image Gallery
 const imageNames = [
@@ -233,20 +284,14 @@ const imageNames = [
     '503253046_1246110420260386_6672939196160631086_n.webp',
     '503483906_2103951930079511_7799135318677570974_n.webp',
     '504733398_18506580940047858_771023618499306690_n.webp',
-    'IMG_4853.webp', 'IMG_4864.webp', 'IMG_4874.webp', 'IMG_8709.webp',
-    'IMG_8710.webp', 'IMG_8711.webp', 'IMG_8712.webp', 'IMG_8713.webp',
-    'IMG_8714.webp', 'IMG_8715.webp', 'IMG_8716.webp', 'IMG_8721.webp',
-    'IMG_8722.webp', 'IMG_8723.webp', 'IMG_8724.webp', 'IMG_8725.webp',
-    'IMG_8726.webp', 'IMG_8727.webp', 'IMG_8729.webp', 'IMG_8732.webp',
-    'IMG_8733.webp', 'IMG_8734.webp', 'IMG_8736.webp', 'IMG_8739.webp',
-    'IMG_8740.webp', 'IMG_8768.webp', 'IMG_8769.webp', 'IMG_8770.webp',
-    'IMG_8775.webp', 'IMG_8776.webp', 'IMG_8781.webp', 'IMG_8782.webp',
-    'IMG_8783.webp', 'IMG_8784.webp', 'IMG_8808.webp', 'IMG_8809.webp',
-    'IMG_8810.webp', 'IMG_8822.webp', 'IMG_8823.webp', 'IMG_8835.webp',
-    'IMG_8836.webp', 'IMG_8841.webp', 'IMG_8959.webp', 'IMG_8961.webp',
-    'IMG_8962.webp', 'IMG_8965.webp', 'IMG_8968.webp', 'IMG_8969.webp',
-    'IMG_8970.webp', 'IMG_8971.webp', 'IMG_8972.webp', 'IMG_8980.webp',
-    'IMG_8981.webp', 'IMG_8997.webp', 'IMG_9130.webp',
+    'IMG_4853.webp',
+   'IMG_8711.webp', 'IMG_8709.webp','IMG_8980.webp',
+      'IMG_8716.webp', 'IMG_8721.webp',
+    'IMG_8729.webp', 'IMG_9130.webp','IMG_8997.webp',
+    'IMG_8770.webp', 'IMG_8784.webp', 'IMG_8809.webp',
+    'IMG_8965.webp', 'IMG_8970.webp',
+    'IMG_8841.webp', 'IMG_8959.webp',
+
 ];
 
 // Path to the folder where gallery images are stored
@@ -345,7 +390,7 @@ document.getElementById('contact-form').addEventListener('submit', async functio
     responseBox.textContent = "Sending...";
 
     try {
-        const response = await fetch('https://d6e2p6mojn8wd.cloudfront.net/api/contact', {
+        const response = await fetch('/api/contact', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)

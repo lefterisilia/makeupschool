@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 const TO_EMAIL       = process.env.TO_EMAIL;
 const GMAIL_USER     = process.env.GMAIL_USER;   // Gmail/Workspace address you own
 const GMAIL_PASS     = process.env.GMAIL_PASS;   // Google App Password (not your real pwd)
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "https://d6e2p6mojn8wd.cloudfront.net";
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "https://www.makeupschoolbyelenaenglezou.com";
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",

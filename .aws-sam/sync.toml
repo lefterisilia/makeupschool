@@ -2,8 +2,8 @@
 
 [sync_state]
 dependency_layer = false
-latest_infra_sync_time = "2025-08-10T19:21:32.022284"
+latest_infra_sync_time = "2025-09-07T18:56:45.170826"
 
 [resource_sync_states."ZipFunctionSyncFlow:ContactFormFunction"]
-hash = "a564bd4b467a053aba75f5f57573ae6220bced1ef84ad4298ccec97d49a6d145"
-sync_time = "2025-08-09T23:51:15.599436"
+hash = "9223354c41357cc3369b647aa3812ae1aa02e73e941dbb7ad9d6f272dbcb86a1"
+sync_time = "2025-09-07T18:09:05.014231"

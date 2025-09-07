@@ -14,7 +14,242 @@ body {
     transition: max-height 400ms cubic-bezier(.2,.8,.2,1);
     will-change: max-height;
 }
+.portfolio-card {
+    cursor: pointer;
+    width: 300px; /* Adjust as needed */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
 
+/* Portfolio Section */
+.section-container#portfolio {
+    padding: 2rem;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.portfolio-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+/* Portfolio Card (Always Minimized) */
+.portfolio-card {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.portfolio-card-title {
+    font-size: 1.5rem;
+    margin: 1rem;
+    color: #333;
+}
+
+.course-image {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    object-fit: cover;
+}
+
+.portfolio-card-description {
+    padding: 0 1rem 1rem;
+    font-size: 1rem;
+    color: #666;
+}
+
+/* Hide detailed content in cards */
+.portfolio-card .course-title,
+.portfolio-card .course-content-list,
+.portfolio-card .contact-btn {
+    display: none;
+}
+
+/* Modal Styles */
+/* Modal Styles */
+#course-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+#modal-body {
+    background: black;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+#modal-body .course-title {
+    font-size: 1.3rem;
+    margin: 1rem 0 0.5rem;
+    color: #ffffff;
+    display: block;
+}
+
+#modal-body .course-content-list {
+    margin: 0 0 1rem 1.5rem;
+    font-size: 1rem;
+    color: #cac7c7;
+    display: block;
+    text-align: left;
+    padding-left: 1.5rem;
+}
+
+#modal-body .course-content-list li {
+    margin-bottom: 0.5rem;
+}
+
+#modal-body .course-content-list li::marker {
+    color: #4f46e5;
+}
+
+#modal-body .contact-btn {
+    display: inline-block;
+    padding: 0.75em 2em;
+    background: linear-gradient(90deg, #6366f1 0%, #a5b4fc 100%);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(144, 78, 149, 0.15);
+    transition: background 0.3s, transform 0.2s;
+    margin: 1rem 0;
+}
+
+#modal-body .contact-btn:hover,
+#modal-body .contact-btn:focus {
+    background: linear-gradient(90deg, #818cf8 0%, #6366f1 100%);
+    transform: translateY(-2px) scale(1.04);
+    outline: none;
+}
+
+/* Close Button Styles (Vertical Text, Next to Modal) */
+#modal-close {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 10rem 1.5rem;
+    cursor: pointer;
+    border-radius: 50px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 500px;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+#modal-close .close-letter {
+    display: block;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+#modal-close:hover {
+    background: #555;
+    transform: scale(1.05);
+}
+
+#modal-close:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    .portfolio-items {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        border: #9b51e0;
+        border-radius: 5rem;
+        width: 95%;
+    }
+
+    #modal-body {
+        width: 95%;
+        padding: 1rem;
+    }
+
+    #modal-close {
+        width: 100px;
+        height: 40px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        padding: 0.9rem;
+    }
+
+    #modal-close .close-letter {
+        font-size: 1rem;
+        line-height: 1;
+        display: inline-block;
+        margin-left: 0.2rem;
+    }
+
+}
+
+.contact-btn {
+    display: inline-block;
+    padding: 0.75em 2em;
+    background: linear-gradient(90deg, #6366f1 0%, #a5b4fc 100%);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(144, 78, 149, 0.15);
+    transition: background 0.3s, transform 0.2s;
+}
+
+.contact-btn:hover,
+.contact-btn:focus {
+    background: linear-gradient(90deg, #6366f1 0%, #a5b4fc 100%);
+    transform: translateY(-2px) scale(1.04);
+    outline: none;
+}
 /* When expanded, lift the clamp */
 .photos-expanded .photos-viewport {
     max-height: none;

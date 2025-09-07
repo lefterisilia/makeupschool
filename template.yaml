@@ -29,12 +29,17 @@ Resources:
           Properties:
             Path: /api/contact
             Method: POST
+        ContactApiOptions:
+          Type: Api
+          Properties:
+            Path: /api/contact
+            Method: OPTIONS
       Environment:
         Variables:
           TO_EMAIL: "makeupschoolbyelenaenglezou@gmail.com"
           GMAIL_USER: "testreactnative72@gmail.com"
           GMAIL_PASS: "{{resolve:ssm:/makeupschool/gmail/pass}}"
-          ALLOWED_ORIGIN: "https://d6e2p6mojn8wd.cloudfront.net"
+          ALLOWED_ORIGIN: "https://www.makeupschoolbyelenaenglezou.com"
 
   ResponseHeadersPolicy:
     Type: AWS::CloudFront::ResponseHeadersPolicy
@@ -46,17 +51,17 @@ Resources:
           AccessControlAllowCredentials: false
           AccessControlAllowHeaders:
             Items:
-              - "*"
+              - "Content-Type"
           AccessControlAllowMethods:
             Items:
               - GET
               - HEAD
           AccessControlAllowOrigins:
             Items:
-              - "*"
+              - "https://www.makeupschoolbyelenaenglezou.com"
           AccessControlExposeHeaders:
             Items:
-              - "*"
+              - "Content-Length"
           OriginOverride: true
 
   ResponseHeadersPolicyAPI:
@@ -68,7 +73,7 @@ Resources:
         CorsConfig:
           AccessControlAllowHeaders:
             Items:
-              - "*"
+              - "Content-Type"
           AccessControlAllowMethods:
             Items:
               - GET
@@ -78,10 +83,10 @@ Resources:
           AccessControlAllowCredentials: false
           AccessControlAllowOrigins:
             Items:
-              - "*"
+              - "https://www.makeupschoolbyelenaenglezou.com"
           AccessControlExposeHeaders:
             Items:
-              - "*"
+              - "Content-Length"
           OriginOverride: true
 
   WebsiteBucket:
@@ -149,6 +154,8 @@ Resources:
               QueryString: true
               Headers:
                 - "Authorization"
+                - "Origin"
+                - "Content-Type"
             Compress: true
             ResponseHeadersPolicyId: !Ref ResponseHeadersPolicyAPI
         DefaultCacheBehavior:
@@ -172,22 +179,22 @@ Resources:
         PriceClass: PriceClass_100
 
 
-#        Aliases:
-#          - 'example.com'
-#        ViewerCertificate:
-#          MinimumProtocolVersion: TLSv1.2_2021
-#          SslSupportMethod: sni-only
-#          AcmCertificateArn: !Sub "{{resolve:ssm:/pishys/acm_certificate_arn:1}}"
+        Aliases:
+          - www.makeupschoolbyelenaenglezou.com
+        ViewerCertificate:
+          MinimumProtocolVersion: TLSv1.2_2021
+          SslSupportMethod: sni-only
+          AcmCertificateArn: "{{resolve:ssm:/makeupschool/acm_certificate_arn}}"
 
-#  WebsiteDNSRecord:
-#    Type: AWS::Route53::RecordSet
-#    Properties:
-#      HostedZoneId: !Sub "{{resolve:ssm:/pishys/hosted_zone_id:1}}"
-#      Name: 'example.com' # Replace with your domain name
-#      Type: A
-#      AliasTarget:
-#        DNSName: !GetAtt WebsiteCloudFrontDistribution.DomainName
-#        HostedZoneId: !Sub "{{resolve:ssm:/pishys/hosted_zone_id:1}}" # Replace with actual CloudFront hosted zone ID
+  WebsiteDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: "{{resolve:ssm:/makeupschool/hosted_zone_id}}"
+      Name: www.makeupschoolbyelenaenglezou.com
+      Type: A
+      AliasTarget:
+        DNSName: !GetAtt WebsiteCloudFrontDistribution.DomainName
+        HostedZoneId: Z2FDTNDATAQYW2 # CloudFront global hosted zone ID
 
 Outputs:
   CloudFrontURL:
@@ -198,4 +205,4 @@ Outputs:
 
   ApiEndpoint:
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/api/contact"
-    Description: Lambda API Endpoin
+    Description: Lambda API Endpoint
