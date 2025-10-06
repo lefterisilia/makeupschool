@@ -1,130 +1,164 @@
-# makeupschool
+# Makeup School by Elena Englezou — Website and Serverless Backend
 
-This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
+A production‑ready static website with a secure, serverless contact form built on AWS.
 
-- hello_world - Code for the application's Lambda function.
-- events - Invocation events that you can use to invoke the function.
-- tests - Unit tests for the application code. 
-- template.yaml - A template that defines the application's AWS resources.
+This repository contains:
+- A static site (HTML/CSS/JS) for the Makeup School brand.
+- A Node.js (Lambda) backend that receives contact form submissions and sends email via Gmail/Google Workspace SMTP using Nodemailer.
+- An AWS SAM template that provisions S3 (static hosting), CloudFront (CDN + custom domain + HTTPS), API Gateway, Lambda, Route53 record, and response‑security headers.
 
-The application uses several AWS resources, including Lambda functions and an API Gateway API. These resources are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
+Live domain (as configured in infrastructure):
+- https://www.makeupschoolbyelenaenglezou.com
 
-If you prefer to use an integrated development environment (IDE) to build and test your application, you can use the AWS Toolkit.  
-The AWS Toolkit is an open source plug-in for popular IDEs that uses the SAM CLI to build and deploy serverless applications on AWS. The AWS Toolkit also adds a simplified step-through debugging experience for Lambda function code. See the following links to get started.
 
-* [CLion](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [GoLand](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [IntelliJ](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [WebStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [Rider](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [PhpStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [PyCharm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [RubyMine](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [DataGrip](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [VS Code](https://docs.aws.amazon.com/toolkit-for-vscode/latest/userguide/welcome.html)
-* [Visual Studio](https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/welcome.html)
+## Architecture Overview
+- S3 bucket hosts the static website (index.html, 404.html, assets).
+- CloudFront sits in front of S3 with security headers and short TTL for quick content refresh.
+- CloudFront routes /api/* to API Gateway (origin #2).
+- API Gateway invokes ContactFormFunction (Node.js 22, Nodemailer) to send emails.
+- Route53 A‑alias points www.makeupschoolbyelenaenglezou.com to the CloudFront distribution.
+- ACM certificate (in us-east-1) terminates TLS for the custom domain.
+- Secrets and dynamic values are pulled from SSM Parameter Store.
 
-## Deploy the sample application
+Key resources (from template.yaml):
+- contactLambda/contact.js (handler: contact.handler)
+- CloudFront behaviors for static site and /api/*
+- ResponseHeadersPolicy and ResponseHeadersPolicyAPI for security/CORS
+- SSM parameters used:
+  - /makeupschool/gmail/pass (SecureString: Gmail App Password)
+  - /makeupschool/acm_certificate_arn (ACM cert for the domain, in us-east-1)
+  - /makeupschool/hosted_zone_id (Route53 hosted zone ID for the domain)
 
-The Serverless Application Model Command Line Interface (SAM CLI) is an extension of the AWS CLI that adds functionality for building and testing Lambda applications. It uses Docker to run your functions in an Amazon Linux environment that matches Lambda. It can also emulate your application's build environment and API.
 
-To use the SAM CLI, you need the following tools.
+## Project Structure
+- website/
+  - index.html, styles.css, scripts.js
+  - imgs/ (assets, favicons, photos, etc.)
+  - 404.html, thank-you.html
+- contactLambda/
+  - contact.js (Nodemailer transporter, validation, CORS)
+  - package.json (depends on nodemailer)
+- template.yaml (all infra defined with AWS SAM/CloudFormation)
+- samconfig.toml (optional saved deploy config)
 
-* SAM CLI - [Install the SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
-* [Python 3 installed](https://www.python.org/downloads/)
-* Docker - [Install Docker community edition](https://hub.docker.com/search/?type=edition&offering=community)
 
-To build and deploy your application for the first time, run the following in your shell:
+## Features
+- Static site delivered via CloudFront (fast, cached, HTTPS).
+- Secure contact form endpoint: POST /api/contact
+  - Validates required fields (name, email, phone, subject, message), sizes, and formats.
+  - Honeypot field to deter bots.
+  - Sends mail from your Gmail/Workspace using an App Password (DMARC‑safe from header, reply‑to set to visitor).
+  - CORS restricted to the production origin.
+- Security headers applied by CloudFront response header policies.
 
-```bash
+
+## Prerequisites
+- AWS account with permissions to create CloudFormation stacks, S3, CloudFront, Route53, Lambda, API Gateway, and SSM parameters.
+- AWS SAM CLI installed: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html
+- Optional: Docker (for consistent builds).
+- A registered domain in Route53 (or delegated to Route53) for www.makeupschoolbyelenaenglezou.com.
+- An ACM certificate in us-east-1 that covers the domain (stored in SSM as described below).
+- A Gmail/Google Workspace mailbox and a Google App Password for SMTP.
+
+
+## One‑Time Setup (SSM Parameters)
+Create the following SSM parameters before deploying (use us-east-1 for ACM/CloudFront):
+
+1) /makeupschool/gmail/pass
+- Type: SecureString
+- Value: your Google App Password (not your normal password)
+
+2) /makeupschool/acm_certificate_arn
+- Type: String
+- Value: the ARN of your ACM certificate in us-east-1 that includes www.makeupschoolbyelenaenglezou.com
+
+3) /makeupschool/hosted_zone_id
+- Type: String
+- Value: your Route53 Hosted Zone ID for the domain
+
+The Lambda uses these environment variables (set in template.yaml):
+- TO_EMAIL: makeupschoolbyelenaenglezou@gmail.com (recipient)
+- GMAIL_USER: testreactnative72@gmail.com (sender account)
+- GMAIL_PASS: resolved from SSM parameter above
+- ALLOWED_ORIGIN: https://www.makeupschoolbyelenaenglezou.com
+
+
+## Deploy
+Build and deploy with SAM (first time uses guided prompts):
+
+```
 sam build --use-container
 sam deploy --guided
 ```
 
-The first command will build the source of your application. The second command will package and deploy your application to AWS, with a series of prompts:
+Notes:
+- The stack provisions an S3 bucket named via mapping (default: makeup-school-website-bucket). Ensure this name is globally unique if you change it.
+- CloudFront ACM cert must be in us-east-1; the ARN is read from /makeupschool/acm_certificate_arn.
+- Route53 record is created in the hosted zone provided by /makeupschool/hosted_zone_id.
+- After deploy, Outputs include:
+  - CloudFrontURL: the distribution URL (useful for testing before DNS propagation)
+  - ApiEndpoint: https://{restApiId}.execute-api.{region}.amazonaws.com/Prod/api/contact
 
-* **Stack Name**: The name of the stack to deploy to CloudFormation. This should be unique to your account and region, and a good starting point would be something matching your project name.
-* **AWS Region**: The AWS region you want to deploy your app to.
-* **Confirm changes before deploy**: If set to yes, any change sets will be shown to you before execution for manual review. If set to no, the AWS SAM CLI will automatically deploy application changes.
-* **Allow SAM CLI IAM role creation**: Many AWS SAM templates, including this example, create AWS IAM roles required for the AWS Lambda function(s) included to access AWS services. By default, these are scoped down to minimum required permissions. To deploy an AWS CloudFormation stack which creates or modifies IAM roles, the `CAPABILITY_IAM` value for `capabilities` must be provided. If permission isn't provided through this prompt, to deploy this example you must explicitly pass `--capabilities CAPABILITY_IAM` to the `sam deploy` command.
-* **Save arguments to samconfig.toml**: If set to yes, your choices will be saved to a configuration file inside the project, so that in the future you can just re-run `sam deploy` without parameters to deploy changes to your application.
+DNS:
+- The template creates an A‑alias at www.makeupschoolbyelenaenglezou.com pointing to CloudFront.
+- Allow some time for DNS/CloudFront propagation.
 
-You can find your API Gateway Endpoint URL in the output values displayed after deployment.
 
-## Use the SAM CLI to build and test locally
+## Updating the Website Content
+- Edit files under website/ (HTML, CSS, JS, images).
+- Redeploy to publish changes: `sam build --use-container && sam deploy`
+- Caching: Default TTL is 60 seconds (see WebsiteCloudfrontTTL mapping). You can adjust this in template.yaml if needed.
 
-Build your application with the `sam build --use-container` command.
 
-```bash
-makeupschool$ sam build --use-container
+## Local Testing (Lambda)
+Invoke the contact function locally with a sample event:
+
+```
+sam local invoke ContactFormFunction --event events/contact.json
 ```
 
-The SAM CLI installs dependencies defined in `hello_world/requirements.txt`, creates a deployment package, and saves it in the `.aws-sam/build` folder.
+Example event body (save as events/contact.json):
 
-Test a single function by invoking it directly with a test event. An event is a JSON document that represents the input that the function receives from the event source. Test events are included in the `events` folder in this project.
-
-Run functions locally and invoke them with the `sam local invoke` command.
-
-```bash
-makeupschool$ sam local invoke HelloWorldFunction --event events/event.json
+```
+{
+  "httpMethod": "POST",
+  "headers": { "Content-Type": "application/json" },
+  "body": "{\"name\":\"Jane Doe\",\"email\":\"jane@example.com\",\"phone\":\"+357 99 123456\",\"subject\":\"Course inquiry\",\"message\":\"Hello!\"}"
+}
 ```
 
-The SAM CLI can also emulate your application's API. Use the `sam local start-api` to run the API locally on port 3000.
+Note: For local SMTP tests you may need valid env vars. For cloud runs, Lambda gets them from the template/SSM.
 
-```bash
-makeupschool$ sam local start-api
-makeupschool$ curl http://localhost:3000/
+
+## API Usage
+- Endpoint (via CloudFront): https://www.makeupschoolbyelenaenglezou.com/api/contact
+- Method: POST
+- Headers: Content-Type: application/json
+- JSON body fields (all required): name, email, phone, subject, message
+- The Lambda returns JSON and sets CORS for the production origin.
+
+
+## Security Considerations
+- Gmail must use an App Password; do not store real passwords.
+- SSM SecureString protects the SMTP secret.
+- CORS origin is restricted and CloudFront adds security headers.
+- The Lambda sanitizes headers and validates inputs to reduce abuse.
+
+
+## Troubleshooting
+- 4xx from API: ensure JSON Content-Type and required fields, and that the honeypot field (company) is not sent.
+- 500 from API: verify GMAIL_USER and SSM password are correct; check CloudWatch Logs for ContactFormFunction.
+- DNS/SSL: ensure ACM cert ACM arn is correct (us-east-1) and DNS is using the correct hosted zone.
+- Stale content: CloudFront TTL is 60s by default; wait or adjust the mapping to lower TTL for development.
+
+
+## Cleaning Up
+Delete the stack and all resources:
+
 ```
-
-The SAM CLI reads the application template to determine the API's routes and the functions that they invoke. The `Events` property on each function's definition includes the route and method for each path.
-
-```yaml
-      Events:
-        HelloWorld:
-          Type: Api
-          Properties:
-            Path: /hello
-            Method: get
-```
-
-## Add a resource to your application
-The application template uses AWS Serverless Application Model (AWS SAM) to define application resources. AWS SAM is an extension of AWS CloudFormation with a simpler syntax for configuring common serverless application resources such as functions, triggers, and APIs. For resources not included in [the SAM specification](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md), you can use standard [AWS CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) resource types.
-
-## Fetch, tail, and filter Lambda function logs
-
-To simplify troubleshooting, SAM CLI has a command called `sam logs`. `sam logs` lets you fetch logs generated by your deployed Lambda function from the command line. In addition to printing the logs on the terminal, this command has several nifty features to help you quickly find the bug.
-
-`NOTE`: This command works for all AWS Lambda functions; not just the ones you deploy using SAM.
-
-```bash
-makeupschool$ sam logs -n HelloWorldFunction --stack-name "makeupschool" --tail
-```
-
-You can find more information and examples about filtering Lambda function logs in the [SAM CLI Documentation](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-logging.html).
-
-## Tests
-
-Tests are defined in the `tests` folder in this project. Use PIP to install the test dependencies and run tests.
-
-```bash
-makeupschool$ pip install -r tests/requirements.txt --user
-# unit test
-makeupschool$ python -m pytest tests/unit -v
-# integration test, requiring deploying the stack first.
-# Create the env variable AWS_SAM_STACK_NAME with the name of the stack we are testing
-makeupschool$ AWS_SAM_STACK_NAME="makeupschool" python -m pytest tests/integration -v
-```
-
-## Cleanup
-
-To delete the sample application that you created, use the AWS CLI. Assuming you used your project name for the stack name, you can run the following:
-
-```bash
 sam delete --stack-name "makeupschool"
 ```
 
-## Resources
 
-See the [AWS SAM developer guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html) for an introduction to SAM specification, the SAM CLI, and serverless application concepts.
-
-Next, you can use AWS Serverless Application Repository to deploy ready to use Apps that go beyond hello world samples and learn how authors developed their applications: [AWS Serverless Application Repository main page](https://aws.amazon.com/serverless/serverlessrepo/)
+## License
+Proprietary. All rights reserved unless otherwise noted.
