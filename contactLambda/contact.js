@@ -94,7 +94,6 @@ exports.handler = async (event) => {
         return resp(500, { error: "Failed to send email" });
     }
 };
-
 // Basic header sanitization to avoid CRLF injection in display name
 function sanitizeHeader(s) {
     return String(s).replace(/[\r\n]+/g, " ").replace(/["<>]/g, "");
