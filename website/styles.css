@@ -7,6 +7,7 @@ body {
     background: #18181b;
     background-attachment: fixed;
 }
+
 /* --- Collapsible Photos (show first 3 rows, then expand) --- */
 .photos-viewport {
     overflow: hidden;
@@ -14,16 +15,29 @@ body {
     transition: max-height 400ms cubic-bezier(.2,.8,.2,1);
     will-change: max-height;
 }
-.portfolio-card {
-    cursor: pointer;
-    width: 300px; /* Adjust as needed */
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: all 0.3s ease;
+
+/* When expanded, lift the clamp */
+.photos-expanded .photos-viewport {
+    max-height: none;
 }
 
-/* Portfolio Section */
+/* Footer button (sits at the end under the gallery) */
+.photos-footer-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    margin-top: 1rem;
+    padding: .35rem .6rem;
+    border-radius: .6rem;
+    background: rgba(255,255,255,.06);
+    border: none;
+    cursor: pointer;
+}
+.photos-footer-toggle:hover {
+    background: rgba(255,255,255,.12);
+}
+
+/* === Portfolio Section === */
 .section-container#portfolio {
     padding: 2rem;
     text-align: center;
@@ -32,53 +46,138 @@ body {
 .section-title {
     font-size: 2rem;
     margin-bottom: 1rem;
+    color: #fff;
 }
 
+.section-text {
+    font-size: 1.1rem;
+    color: #d1d5db;
+}
+
+/* Portfolio layout wrapper */
 .portfolio-items {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
 }
 
-/* Portfolio Card (Always Minimized) */
+/* Portfolio Card (main style) */
 .portfolio-card {
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    overflow: hidden;
     cursor: pointer;
-    transition: all 0.3s ease;
+    width: 260px;
+    background: #18181b;
+    border: 1px solid #ccc;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition:
+            box-shadow 220ms ease,
+            transform 220ms ease,
+            background 0.3s ease;
 }
 
+.portfolio-card:hover {
+    transform: translateY(-6px);
+}
+
+/* Card contents */
 .portfolio-card-title {
     font-size: 1.5rem;
-    margin: 1rem;
-    color: #333;
-}
-
-.course-image {
-    width: 100%;
-    height: auto;
-    max-height: 200px;
-    object-fit: cover;
+    margin: 0 0 1rem 0;
+    color: #fff;
 }
 
 .portfolio-card-description {
-    padding: 0 1rem 1rem;
+    padding: 0;
     font-size: 1rem;
-    color: #666;
+    color: #d1d5db;
 }
 
-/* Hide detailed content in cards */
+/* Hide detailed content in cards by default */
 .portfolio-card .course-title,
 .portfolio-card .course-content-list,
 .portfolio-card .contact-btn {
     display: none;
 }
 
-/* Modal Styles */
-/* Modal Styles */
+/* Expandable details inside card */
+.card-details {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-6px);
+    overflow: hidden;
+    transition:
+            max-height 400ms cubic-bezier(.2,.8,.2,1),
+            opacity 260ms ease,
+            transform 260ms ease;
+    will-change: max-height, transform, opacity;
+}
+
+.portfolio-card.expanded .card-details {
+    max-height: var(--details-max, 1200px);
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.portfolio-card.expanded {
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    transform: translateY(-4px);
+}
+
+/* Arrow rotation */
+.portfolio-card .arrow {
+    display: inline-block;
+    transition: transform 300ms ease;
+}
+.portfolio-card.expanded .arrow {
+    transform: rotate(180deg);
+}
+
+/* Toggle buttons */
+.toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 1rem;
+    gap: .4rem;
+    padding: .35rem .6rem;
+    border-radius: .5rem;
+    background: rgba(255,255,255,.06);
+    border: none;
+    cursor: pointer;
+}
+.toggle-btn:hover {
+    background: rgba(255,255,255,.12);
+}
+
+#toggle-all {
+    display: inline-flex;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+.portfolio-card .toggle-btn.card-toggle {
+    display: none;
+}
+
+.course-description {
+    text-align: center;
+    color: #818cf8;
+    font-size: 1.2rem;
+}
+
+/* Course image inside cards */
+.course-image {
+    width: 100%;
+    max-width: 220px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 0.75rem;
+    display: block;
+    margin: 0 auto 1rem auto;
+}
+
+/* === Modal Styles === */
 #course-modal {
     display: none;
     position: fixed;
@@ -192,44 +291,7 @@ body {
     outline-offset: 2px;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 600px) {
-    .portfolio-items {
-        grid-template-columns: 1fr;
-    }
-
-    .modal-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-        border: #9b51e0;
-        border-radius: 5rem;
-        width: 95%;
-    }
-
-    #modal-body {
-        width: 95%;
-        padding: 1rem;
-    }
-
-    #modal-close {
-        width: 100px;
-        height: 40px;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        padding: 0.9rem;
-    }
-
-    #modal-close .close-letter {
-        font-size: 1rem;
-        line-height: 1;
-        display: inline-block;
-        margin-left: 0.2rem;
-    }
-
-}
-
+/* === Buttons === */
 .contact-btn {
     display: inline-block;
     padding: 0.75em 2em;
@@ -250,52 +312,29 @@ body {
     transform: translateY(-2px) scale(1.04);
     outline: none;
 }
-/* When expanded, lift the clamp */
-.photos-expanded .photos-viewport {
-    max-height: none;
-}
 
-/* Footer button (sits at the end under the gallery) */
-.photos-footer-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: .4rem;
-    margin-top: 1rem;
-    padding: .35rem .6rem;
-    border-radius: .6rem;
-    background: rgba(255,255,255,.06);
-    border: none;
-    cursor: pointer;
-}
-.photos-footer-toggle:hover { background: rgba(255,255,255,.12); }
-
+/* === Side by side layout === */
 .side-by-side {
     display: flex;
     align-items: center;
     gap: 20rem;
     justify-content: center;
 }
-.course-image {
-    width: 100%;
-    max-width: 220px;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 0.75rem;
-    display: block;
-    margin: 0 auto 1rem auto;
-}
+
 .about-text {
     flex: 1;
     text-align: left;
-    max-width: 600px; /* Adjust as needed */
+    max-width: 600px;
     word-break: break-word;
 }
+
 .about-image {
     max-width: 350px;
     width: 100%;
     border-radius: 1rem;
     flex-shrink: 0;
 }
+
 /* === Hero Section === */
 .hero-section {
     background-image: url('imgs/download.webp');
@@ -305,23 +344,7 @@ body {
     min-height: calc(var(--vh, 1vh) * 100);
     position: relative;
 }
-.course-content-list {
-    text-align: left;
-    padding-left: 1.5rem; /* ensures bullets are visible */
-    margin: 1rem 0;
-    color: #d1d5db;
-}
-.course-content-list li {
-    margin-bottom: 0.5rem;
-}
-.course-content-list li::marker {
-    color: #4f46e5;
-}
-.course-title{
-    color: #fff;
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
-}
+
 .hero-section::before {
     content: "";
     position: absolute;
@@ -341,10 +364,11 @@ body {
     text-shadow: 0 2px 16px rgba(0,0,0,0.5);
 }
 
+/* Fluid hero title for better responsiveness */
 .hero-title {
-    font-size: 3.5rem;
+    font-size: clamp(2rem, 4vw, 3.5rem);
     margin-bottom: 1rem;
-    letter-spacing: 10px;
+    letter-spacing: clamp(4px, 0.7vw, 10px);
 }
 
 .highlight-name {
@@ -357,28 +381,39 @@ body {
     color: #d1d5db;
 }
 
+/* === NAVBAR === */
 #navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 200px;
+    /* slimmer default height so laptops don't feel cramped */
+    height: 120px;
     background: transparent;
     box-shadow: none;
-    transition: background 0.3s, box-shadow 0.1s;
+    transition: background 0.3s, box-shadow 0.1s, transform 0.3s;
     z-index: 1000;
     display: flex;
     align-items: center;
 }
+
 #navbar.hide {
     transform: translateY(-100%);
-    transition: transform 0.3s;
 }
+
 #navbar.scrolled {
     background: rgba(24, 24, 27, 0.95);
     box-shadow: 0 2px 12px rgba(0,0,0,0.12);
-    transition: background 0.3s, box-shadow 0.1s;
 }
+
+/* On very large desktops, keep the tall hero-style header */
+@media (min-width: 1440px) and (min-height: 900px) {
+    #navbar {
+        height: 200px;
+    }
+}
+
+/* Navbar inner container */
 .navbar-container {
     display: flex;
     justify-content: space-between;
@@ -386,22 +421,47 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
-    padding: 0 5rem;
+    padding: 0 3rem;
     height: 80px;
-    gap: 2rem; /* Adjust this value for more or less space */
-
+    gap: 2rem;
 }
+
+/* Slightly more padding on very large desktop */
+@media (min-width: 1440px) and (min-height: 900px) {
+    .navbar-container {
+        padding: 0 5rem;
+        height: 80px;
+    }
+}
+
+/* Logo */
+.logoPick {
+    width: 180px;
+    height: auto;
+    margin-left: -100px;
+    margin-top: 20px;
+}
+
+/* Mid-size screens (typical laptops) logo adjustment */
+@media (max-width: 1366px) and (min-width: 901px) {
+    .logoPick {
+        width: 140px;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+.course-subtitle {
+    font-size: 1.1rem;
+    color: var(--primary-color, #fff);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+/* Contact layout */
 .contact-flex {
     display: flex;
     gap: 2em;
     flex-wrap: wrap;
-}
-
-.contact-form, .contact-info {
-    flex: 1 1 300px;
-    background: rgba(0,0,0,0.2);
-    padding: 2em;
-    border-radius: 10px;
 }
 
 /* ===== Modern Contact Card ===== */
@@ -427,7 +487,10 @@ body {
     opacity: 0.18;
     z-index: 0;
 }
-.contact-card > * { position: relative; z-index: 1; }
+.contact-card > * {
+    position: relative;
+    z-index: 1;
+}
 
 /* header */
 .contact-head h3 {
@@ -440,6 +503,7 @@ body {
     color: #cbd5e1;
     font-size: 0.95rem;
 }
+
 /* list */
 .contact-list {
     list-style: none;
@@ -522,7 +586,6 @@ body {
     color: #a5b4fc;
 }
 
-
 /* socials */
 .social-links {
     display: flex;
@@ -553,23 +616,25 @@ body {
 }
 
 /* Make it play nicely with your existing layout */
-.contact-flex {
-    gap: 1.5rem;
-}
 .contact-form, .contact-card {
     flex: 1 1 300px;
 }
 
 /* Responsive polish */
 @media (max-width: 900px) {
-    .contact-card { padding: 1.25rem; }
+    .contact-card {
+        padding: 1.25rem;
+    }
 }
+
 @media (prefers-reduced-motion: reduce) {
     .contact-row,
-    .contact-card::before { display: none; }
+    .contact-card::before {
+        display: none;
+    }
 }
 
-
+/* NAV LINKS */
 .nav-list {
     display: flex;
     gap: 2rem;
@@ -578,8 +643,9 @@ body {
     margin: 0;
 }
 
+/* Fluid font-size for nav links */
 .nav-link {
-    font-size: 2rem;
+    font-size: clamp(1rem, 1.3vw, 1.6rem);
     color: #fff;
     text-decoration: none;
     transition: background 0.2s;
@@ -590,7 +656,7 @@ body {
     border-radius: 0.375rem;
 }
 
-/* === Sections === */
+/* === Generic Section Container === */
 .section-container {
     background: rgba(39,39,42,0.95);
     border-radius: 1rem;
@@ -599,20 +665,6 @@ body {
     padding: 2.5rem 2rem;
     margin: 4rem auto;
     max-width: 1700px;
-}
-
-/* Arrow rotation */
-.portfolio-card.expanded .arrow {
-    transform: rotate(180deg);
-}
-.section-title {
-    font-size: 2rem;
-    color: #fff;
-}
-
-.section-text {
-    font-size: 1.1rem;
-    color: #d1d5db;
 }
 
 /* === Photo Gallery === */
@@ -632,88 +684,6 @@ body {
 
 .photo-gallery img:hover {
     transform: scale(1.04);
-}
-
-/* === Portfolio === */
-.portfolio-items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: center;
-}
-#toggle-all {
-    display: inline-flex;
-    margin-bottom: 1rem;
-    font-weight: 600;
-}
-.portfolio-card .toggle-btn.card-toggle {
-    display: none;
-}
-
-
-.portfolio-card {
-    transition: box-shadow 220ms ease, transform 220ms ease;
-    background: #18181b;
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    position: relative;
-    overflow: hidden;
-    width: 260px;
-}
-
-.portfolio-card:hover {
-    transform: translateY(-6px);
-}
-.card-details {
-    max-height: 0;
-    opacity: 0;
-    transform: translateY(-6px);
-    overflow: hidden;
-    transition:
-            max-height 400ms cubic-bezier(.2,.8,.2,1),
-            opacity 260ms ease,
-            transform 260ms ease;
-    will-change: max-height, transform, opacity;
-}
-.portfolio-card.expanded .card-details {
-    max-height: var(--details-max, 1200px);
-    opacity: 1;
-    transform: translateY(0);
-}
-.portfolio-card.expanded {
-    box-shadow: 0 10px 30px rgba(0,0,0,.35);
-    transform: translateY(-4px);
-}
-
-/* Arrow rotation */
-.portfolio-card .arrow { display: inline-block; transition: transform 300ms ease; }
-.portfolio-card.expanded .arrow { transform: rotate(180deg); }
-
-/* Make the toggle button align nicely */
-.toggle-btn {
-    display: inline-flex;
-    align-items: center;
-    margin-top: 1rem;
-    gap: .4rem;
-    padding: .35rem .6rem;
-    border-radius: .5rem;
-    background: rgba(255,255,255,.06);
-}
-.toggle-btn:hover { background: rgba(255,255,255,.12); }
-
-.course-description{
-    text-align: center;
-    color: #818cf8;
-    font-size: 1.2rem;
-}
-
-.portfolio-card-title {
-    font-size: 1.5rem;
-    color: #fff;
-}
-
-.portfolio-card-description {
-    color: #d1d5db;
 }
 
 /* === Contact Form === */
@@ -759,118 +729,34 @@ body {
     font-weight: 600;
     transition: background 0.2s;
 }
-.logoPick {
-    width: 180px;
-    height: auto;
-    margin-left: -100px;
-    margin-top: 20px;
-}
 .form-button:hover {
     background: linear-gradient(90deg, #818cf8 0%, #6366f1 100%);
 }
 
-.section-text-about{
+.section-text-about {
     color: #fff;
 }
-/* === Media Queries === */
 
-@media (max-width: 900px) {
-    .nav-links-container.open {
-        animation: slideDown 0.4s cubic-bezier(0.4,0,0.2,1);
-    }
-    section-container {
-        max-width: 800px;
-    }
-    #toggle-all { display: none; }
-    .portfolio-card .toggle-btn.card-toggle { display: inline-flex; }
-
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-40px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    .side-by-side {
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-        text-align: center;
-    }
-    .about-text {
-        text-align: center;
-    }
-    .about-image{
-        max-width: 100%;
-        width: 100%;
-        margin-top: 2rem;
-        margin-bottom: 2rem;
-    }
-    .photo-gallery img:hover {
-        transform: scale(1.2);
-    }
-    .nav-list {
-        flex-direction: column;
-        gap: 2.2rem;
-        align-items: center;
-        width: 100%;
-    }
-    .photo-gallery {
-        display: grid;
-        grid-template-columns: repeat(3, 5fr);
-        padding: 1rem;
-        max-height: none;
-    }
-    .photo-gallery img {
-        border-radius: 0.5rem;
-        height: 110px;
-    }
-    #navbar {
-        height: 100px;
-        background: rgba(30, 30, 34, 0.75);
-        box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-        border-radius: 0 0 1.5rem 1.5rem;
-        backdrop-filter: blur(8px);
-    }
-    #navbar.scrolled {
-            background: #18181b;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.12);
-    }
-
-    .navbar-container {
-        height: 70px;
-        padding: 0 1.5rem;
-        gap: 1rem;
-    }
-    .logoPick {
-        width: 80px;
-        margin-left: 0;
-        margin-top: 0;
-    }
-    .menu-toggle {
-        font-size: 40rem; /* bigger button */
-    }
-    .logoPick {
-        width: 130px; /* bigger logo */
-    }
-    .nav-link {
-        font-size: 1.5rem;
-        padding: 1rem 2rem;
-        border-radius: 0.7rem;
-        background: rgba(39,39,42,0.22);
-        margin: 0.2rem 0;
-        width: 90vw;
-        text-align: center;
-        transition: background 0.2s, color 0.2s;
-    }
-    .nav-link:hover {
-        background: #27272a;
-        color: #a5b4fc;
-    }
+/* course content lists (inside modal and elsewhere) */
+.course-content-list {
+    text-align: left;
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+    color: #d1d5db;
 }
+.course-content-list li {
+    margin-bottom: 0.5rem;
+}
+.course-content-list li::marker {
+    color: #4f46e5;
+}
+.course-title {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+/* === Responsive & Nav Menu === */
 
 /* Hide menu toggle and close by default */
 .menu-toggle,
@@ -885,7 +771,109 @@ body {
     align-items: center;
 }
 
-/* Responsive styles for mobile */
+/* === Media Queries === */
+
+@media (max-width: 900px) {
+    .nav-links-container.open {
+        animation: slideDown 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .section-container {
+        max-width: 800px;
+    }
+
+    #toggle-all {
+        display: none;
+    }
+
+    .portfolio-card .toggle-btn.card-toggle {
+        display: inline-flex;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .side-by-side {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        text-align: center;
+    }
+
+    .about-text {
+        text-align: center;
+    }
+
+    .about-image {
+        max-width: 100%;
+        width: 100%;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .photo-gallery img:hover {
+        transform: scale(1.2);
+    }
+
+    .nav-list {
+        flex-direction: column;
+        gap: 2.2rem;
+        align-items: center;
+        width: 100%;
+    }
+
+    .photo-gallery {
+        display: grid;
+        grid-template-columns: repeat(3, 5fr);
+        padding: 1rem;
+        max-height: none;
+    }
+
+    .photo-gallery img {
+        border-radius: 0.5rem;
+        height: 110px;
+    }
+
+    #navbar {
+        height: 100px;
+        background: rgba(30, 30, 34, 0.75);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+        border-radius: 0 0 1.5rem 1.5rem;
+        backdrop-filter: blur(8px);
+    }
+
+    #navbar.scrolled {
+        background: #18181b;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    }
+
+    .navbar-container {
+        height: 70px;
+        padding: 0 1.5rem;
+        gap: 1rem;
+    }
+
+    .logoPick {
+        width: 130px;
+        margin-left: 0;
+        margin-top: 0;
+    }
+
+    .photo-gallery img {
+        height: 150px;
+        border-radius: 0.5rem;
+    }
+}
+
+/* Responsive styles for mobile nav and layout */
 @media (max-width: 768px) {
     /* Show menu toggle button */
     .menu-toggle {
@@ -897,7 +885,8 @@ body {
         cursor: pointer;
         z-index: 2100;
     }
-    section-container {
+
+    .section-container {
         max-width: 800px;
     }
 
@@ -942,14 +931,32 @@ body {
         border-radius: 0.5rem;
         z-index: 2100;
     }
+
+    .nav-link {
+        font-size: 1.5rem;
+        padding: 1rem 2rem;
+        border-radius: 0.7rem;
+        background: rgba(39,39,42,0.22);
+        margin: 0.2rem 0;
+        width: 90vw;
+        text-align: center;
+        transition: background 0.2s, color 0.2s;
+    }
+
+    .nav-link:hover {
+        background: #27272a;
+        color: #a5b4fc;
+    }
 }
+
+/* Extra small screens */
 @media (max-width: 600px) {
     .hero-section {
         background-attachment: scroll;
     }
 
     .hero-title {
-        font-size: 1.5rem;
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
     }
 
     .section-container {
@@ -963,5 +970,21 @@ body {
     .photo-gallery img {
         height: 150px;
         border-radius: 0.5rem;
+    }
+
+    #modal-close {
+        width: 100px;
+        height: 40px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        padding: 0.9rem;
+    }
+
+    #modal-close .close-letter {
+        font-size: 1rem;
+        line-height: 1;
+        display: inline-block;
+        margin-left: 0.2rem;
     }
 }
