@@ -12,6 +12,37 @@
 </head>
 <body>
 
+<!-- First Visit Goal Modal -->
+<div id="goal-modal" class="goal-modal-overlay">
+    <div class="goal-modal-card">
+        <div class="goal-modal-header">
+            <div class="goal-modal-logo">💄</div>
+            <h2 class="goal-modal-title">Ποιος είναι ο στόχος σου;</h2>
+            <p class="goal-modal-subtitle">Επίλεξε για να δούμε τα κατάλληλα μαθήματα για σένα</p>
+        </div>
+        <div class="goal-options">
+            <button class="goal-option" data-goal-filter="personal">
+                <span class="goal-option-icon">✨</span>
+                <div class="goal-option-text">
+                    <strong>Θέλω να μάθω makeup για μένα</strong>
+                    <span>Custom Makeup · Beauty Map · Beauty Strategy</span>
+                </div>
+                <span class="goal-option-arrow">→</span>
+            </button>
+            <button class="goal-option" data-goal-filter="artist">
+                <span class="goal-option-icon">🎨</span>
+                <div class="goal-option-text">
+                    <strong>Είμαι ή θέλω να γίνω Makeup Artist</strong>
+                    <span>Makeup from Zero · Professional Program · Private Course</span>
+                </div>
+                <span class="goal-option-arrow">→</span>
+            </button>
+        </div>
+        <button class="goal-skip" id="goal-skip">Εμφάνιση όλων των μαθημάτων</button>
+    </div>
+</div>
+
+
 <!-- Hero Section -->
 <section class="hero-section">
     <!-- Navbar -->
@@ -127,9 +158,15 @@
             <button id="modal-close" aria-label="Close modal">&times;</button>
         </div>
     </div>
+    <!-- Course Filters -->
+    <div class="course-filters">
+        <button class="filter-btn active" data-filter="all">✨ Όλα τα μαθήματα</button>
+        <button class="filter-btn" data-filter="personal">💄 Makeup για μένα</button>
+        <button class="filter-btn" data-filter="artist">🎨 Makeup Artist</button>
+    </div>
     <div class="portfolio-items">
-        <!-- Makeup from Zero -------------------------------------------------------------------------------------------------------------------------------->
-        <div class="portfolio-card">
+        <!-- Makeup from Zero -->
+        <div class="portfolio-card" data-goal="artist">
             <h3 class="portfolio-card-title">Makeup from Zero</h3>
             <img src="imgs/courses/firstImage.webp" alt="Makeup from Zero" class="course-image">
             <p class="portfolio-card-description">Από τα πρώτα βήματα στην επαγγελματική αυτοπεποίθηση.</p>
@@ -178,8 +215,8 @@
             </button>
         </div>
 
-        <!-- Professional Makeup Program (2nd) -------------------------------------------------------------------------------------------------------------------------------->
-        <div class="portfolio-card">
+        <!-- Professional Makeup Program -->
+        <div class="portfolio-card" data-goal="artist">
             <h3 class="portfolio-card-title">Professional Makeup Program</h3>
             <img src="imgs/courses/firstCourse.webp" alt="Professional Makeup Program" class="course-image">
             <p class="portfolio-card-description">Εξέλιξε τις δεξιότητές σου. Αναβάθμισε την επαγγελματική σου πορεία</p>
@@ -227,8 +264,8 @@
             </button>
         </div>
 
-        <!-- Private Makeup Course (3rd) ------------------------------------------------------------------------------------------------------------------------------->
-        <div class="portfolio-card">
+        <!-- Private Makeup Course -->
+        <div class="portfolio-card" data-goal="artist">
             <h3 class="portfolio-card-title">Private Makeup Course</h3>
             <img src="imgs/courses/privatemakeup.webp" alt="Private Makeup Training" class="course-image">
             <p class="portfolio-card-description">Εξατομικευμένη επαγγελματική εκπαίδευση, προσαρμοσμένη στους δικούς σου στόχους.</p>
@@ -281,21 +318,21 @@
             </button>
         </div>
 
-        <!-- Personal Makeup Experience (4th) -------------------------------------------------------------------------------------------------------------------------------->
-        <div class="portfolio-card">
-            <h3 class="portfolio-card-title">Personal Makeup Experience</h3>
+        <!-- Custom Makeup Experience -->
+        <div class="portfolio-card" data-goal="personal">
+            <h3 class="portfolio-card-title">Custom Makeup Experience</h3>
             <img src="imgs/courses/personalmakeup.jpeg" alt="Personal Makeup Experience" class="course-image">
-            <p class="portfolio-card-description">Μάθε να αναδεικνύεις τη φυσική σου ομορφιά μέσα από μια απόλυτα εξατομικευμένη εμπειρία μακιγιάζ.</p>
+            <p class="portfolio-card-description">Εξατομικευμένη εκπαίδευση μακιγιάζ, σχεδιασμένη γύρω από τους δικούς σου στόχους. </p>
 
-            <h4 class="course-title">Σε ποιους απευθύνεται</h4>
-            <ul class="course-content-list">
-                <li>Γυναίκες κάθε ηλικίας που θέλουν να μάθουν πώς να αναδεικνύουν τα χαρακτηριστικά τους μόνες τους</li>
-                <li>Σε αρχάριους ή επαγγελματίες που θέλουν εξατομικευμένη εκπαίδευση.</li>
-                <li>Όσες θέλουν να εστιάσουν σε μία ή περισσότερες συγκεκριμένες τεχνικές (π.χ. eyeliner, smoky eyes, σχηματισμός φρυδιών, contour)</li>
-                <li>Όσες θέλουν να αποκτήσουν αυτοπεποίθηση μέσα από την περιποίηση και την προσωπική φροντίδα</li>
-                <li>Όσες θέλουν καθοδήγηση σε προϊόντα και τεχνικές προσαρμοσμένες αποκλειστικά σε εκείνες</li>
-                <li>Σε όσους επιθυμούν ένα μάθημα προσαρμοσμένο στις δικές τους ανάγκες.</li>
-            </ul>
+                <h4 class="course-title">Σε ποιους απευθύνεται</h4>
+                <ul class="course-content-list">
+                    <li>Γυναίκες κάθε ηλικίας που θέλουν να μάθουν πώς να αναδεικνύουν τα χαρακτηριστικά τους μόνες τους</li>
+                    <li>Σε αρχάριους ή επαγγελματίες που θέλουν εξατομικευμένη εκπαίδευση.</li>
+                    <li>Όσες θέλουν να εστιάσουν σε μία ή περισσότερες συγκεκριμένες τεχνικές (π.χ. eyeliner, smoky eyes, σχηματισμός φρυδιών, contour)</li>
+                    <li>Όσες θέλουν να αποκτήσουν αυτοπεποίθηση μέσα από την περιποίηση και την προσωπική φροντίδα</li>
+                    <li>Όσες θέλουν καθοδήγηση σε προϊόντα και τεχνικές προσαρμοσμένες αποκλειστικά σε εκείνες</li>
+                    <li>Σε όσους επιθυμούν ένα μάθημα προσαρμοσμένο στις δικές τους ανάγκες.</li>
+                </ul>
 
             <h4 class="course-title">Το πρόγραμμα περιλαμβάνει</h4>
             <ul class="course-content-list">
@@ -303,10 +340,8 @@
                 <li>Προετοιμασία δέρματος και βάση</li>
                 <li>Τεχνικές ματιών (Smokey Eyes, Cut Crease, Foxy Eyes)</li>
                 <li>Τύποι Eyeliner – σωστό σχήμα και εφαρμογή</li>
-                <li>Σχηματισμός φρυδιών</li>
-                <li>Contouring highlighting</li>
-                <li>Tips για γρήγορο και καθαρό μακιγιάζ</li>
-                <li> Συμβουλές εφαρμογής και επαγγελματικά tips.</li>
+                <li>Επιλογή των κατάλληλων προϊόντων και εργαλείων</li>
+                <li>Πρακτική εξάσκηση με συνεχή καθοδήγηση και εξατομικευμένο feedback</li>
             </ul>
 
             <h4 class="course-title">Διάρκεια</h4>
@@ -316,8 +351,8 @@
             </button>
         </div>
 
-        <!-- My Beauty Map (5th) -------------------------------------------------------------------------------------------------------------------------------->
-        <div class="portfolio-card">
+        <!-- My Beauty Map -->
+        <div class="portfolio-card" data-goal="personal">
             <h3 class="portfolio-card-title">My Beauty Map</h3>
             <img src="imgs/courses/beautyMap.png" alt="My Beauty Map" class="course-image">
             <p class="portfolio-card-description">Δημιούργησε τον δικό σου προσωπικό οδηγό ομορφιάς και μάθε να βάφεσαι σωστά.</p>
@@ -387,9 +422,9 @@
             </div>
         </div>
 
-        <!-- Beauty Business Strategy Session (6th) -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-        <div class="portfolio-card">
-            <h3 class="portfolio-card-title">Beauty Business Strategy Session</h3>
+        <!-- Beauty Business Strategy Session -->
+        <div class="portfolio-card" data-goal="personal">
+                <h3 class="portfolio-card-title">Beauty Business Strategy Session</h3>
             <img src="imgs/courses/beautyBusinesStrategy.jpeg" alt="Beauty Business Strategy Session" class="course-image">
             <p class="portfolio-card-description">Απόκτησε ξεκάθαρη στρατηγική για να αναπτύξεις την καριέρα ή την επιχείρησή σου στον χώρο της ομορφιάς.</p>
             <p class="portfolio-card-description">Μέσα από μια εξατομικευμένη συνεδρία αναλύουμε πού βρίσκεσαι σήμερα, πού θέλεις να φτάσεις και δημιουργούμε ένα ρεαλιστικό πλάνο δράσης.</p>
@@ -455,7 +490,7 @@
             <option>Makeup from Zero</option>
             <option>Professional Makeup Program</option>
             <option>Private Makeup Training</option>
-            <option>Personal Makeup Experience</option>
+            <option>Custom Makeup Experience</option>
             <option>My Beauty Map</option>
             <option>Beauty Business Strategy Session</option>
             <option>Strategic Growth Program</option>
