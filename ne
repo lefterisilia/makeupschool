@@ -11,7 +11,7 @@ add a first time visit cookie modal which will ask   Πιος ειναι ο στ
 
 
 
-Private makeup course subtitle: ταχυρηθμη μαθηματα
+Private makeup course subtitle: ταχύρυθμα μαθήματά
 
 Personal makeup  => custom makeup NEW title
 

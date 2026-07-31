@@ -265,7 +265,14 @@ body {
 .portfolio-card h3:not(.portfolio-card-title) {
     display: none;
 }
-
+.portfolio-card-subtitle-private{
+    color: #aeb6ff;
+    font-size: 0.9rem;
+    margin-top: 0.05rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    text-align: center;
+}
 /* Expandable details inside card */
 .card-details {
     max-height: 0;
