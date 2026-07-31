@@ -304,6 +304,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Image Gallery
 const imageNames = [
+    'IMG_0867.jpeg',
+    'IMG_0886.jpeg',
+    'IMG_0937.jpeg',
+    'IMG_0944.jpeg',
+    'IMG_0954.jpeg' ,
     '436550293_1633480520827504_3293965988730784078_n.webp',
     '436724271_720827799944767_2278386908134671911_n.webp',
     '438958550_395554883385049_4151245827647609884_n.webp',
