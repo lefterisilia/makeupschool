@@ -48,6 +48,65 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.style.overflow = ""; // Restore scrolling
         }
     });
+
+    // ── Course filter buttons ──
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const allCards = document.querySelectorAll('.portfolio-card');
+
+    function applyFilter(filter) {
+        filterBtns.forEach(b => {
+            b.classList.toggle('active', b.dataset.filter === filter);
+        });
+        allCards.forEach(card => {
+            const show = filter === 'all' || card.dataset.goal === filter;
+            card.classList.toggle('hidden', !show);
+        });
+    }
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => applyFilter(btn.dataset.filter));
+    });
+
+    // ── First-visit goal modal ──
+    const goalModal   = document.getElementById('goal-modal');
+    const goalOptions = document.querySelectorAll('.goal-option');
+    const goalSkip    = document.getElementById('goal-skip');
+
+    function closeGoalModal() {
+        goalModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    const GOAL_TTL = 60 * 60 * 1000; // 1 hour in ms
+    const stored = localStorage.getItem('goalSelected');
+    const storedAt = parseInt(localStorage.getItem('goalSelectedAt') || '0', 10);
+    const expired = !stored || (Date.now() - storedAt > GOAL_TTL);
+
+    if (expired) {
+        localStorage.removeItem('goalSelected');
+        localStorage.removeItem('goalSelectedAt');
+        goalModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    goalOptions.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const goal = btn.dataset.goalFilter;
+            localStorage.setItem('goalSelected', goal);
+            localStorage.setItem('goalSelectedAt', Date.now().toString());
+            closeGoalModal();
+            // Scroll to courses and apply filter
+            const section = document.getElementById('portfolio');
+            if (section) section.scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => applyFilter(goal), 400);
+        });
+    });
+
+    goalSkip.addEventListener('click', () => {
+        localStorage.setItem('goalSelected', 'all');
+        localStorage.setItem('goalSelectedAt', Date.now().toString());
+        closeGoalModal();
+    });
 });
 
 // --- Photos "Show more" (first 3 rows, then expand all) ---
