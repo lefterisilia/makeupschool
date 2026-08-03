@@ -27,6 +27,24 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Inject icon-only quick-contact strip into every card
+    cards.forEach(card => {
+        const strip = document.createElement('div');
+        strip.className = 'card-quick-contacts';
+        strip.innerHTML = `
+            <a href="tel:+35799966464" class="card-contact-icon" aria-label="Τηλεφωνική κλήση">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6.6 10.8a15.05 15.05 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.3 21 3 13.7 3 4a1 1 0 0 1 1-1h3.47a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.25 1.02L6.6 10.8Z"/></svg>
+            </a>
+            <a href="mailto:makeupschoolbyelenaenglezou@gmail.com" class="card-contact-icon" aria-label="Email">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
+            </a>
+            <a href="https://calendly.com/elena81eaf" target="_blank" rel="noopener" class="card-contact-icon card-contact-icon--calendly" aria-label="Book a Free 30' Session">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V9h14v11ZM7 11h5v5H7z"/></svg>
+            </a>
+        `;
+        card.appendChild(strip);
+    });
+
     // Close modal when clicking the close button
     modalClose.addEventListener("click", () => {
         modal.style.display = "none";
@@ -58,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
             b.classList.toggle('active', b.dataset.filter === filter);
         });
         allCards.forEach(card => {
-            const show = filter === 'all' || card.dataset.goal === filter;
+            const show = filter === 'all' || (card.dataset.goal && card.dataset.goal.includes(filter));
             card.classList.toggle('hidden', !show);
         });
     }
@@ -304,11 +322,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Image Gallery
 const imageNames = [
-    'IMG_0867.jpeg',
-    'IMG_0886.jpeg',
     'IMG_0937.jpeg',
     'IMG_0944.jpeg',
-    'IMG_0954.jpeg' ,
+    'IMG_0954.jpeg',
     'IMG_0849.jpeg',
     'IMG_0867.jpeg',
     'IMG_0886.jpeg',

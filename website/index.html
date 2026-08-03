@@ -18,7 +18,7 @@
         <div class="goal-modal-header">
             <div class="goal-modal-logo">💄</div>
             <h2 class="goal-modal-title">Ποιος είναι ο στόχος σου;</h2>
-            <p class="goal-modal-subtitle">Επίλεξε για να δούμε τα κατάλληλα μαθήματα για σένα</p>
+            <p class="goal-modal-subtitle">Επέλεξε το πρόγραμμα που σου ταιριάζει</p>
         </div>
         <div class="goal-options">
             <button class="goal-option" data-goal-filter="personal">
@@ -33,14 +33,14 @@
                 <span class="goal-option-icon">🎨</span>
                 <div class="goal-option-text">
                     <strong>Είμαι ή θέλω να γίνω Makeup Artist</strong>
-                    <span>Makeup from Zero · Professional Program · Private Course</span>
+                    <span>Makeup from Zero · Professional Program · Private Course · Beauty Strategy · Custom Makeup</span>
                 </div>
                 <span class="goal-option-arrow">→</span>
             </button>
             <div class="modal-contact-actions goal-modal-actions">
                 <a class="modal-contact-action-btn modal-contact-action-btn--calendly goal-modal-calendly" href="https://calendly.com/elena81eaf" target="_blank" rel="noopener" aria-label="Book via Calendly">
                     <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V9h14v11ZM7 11h5v5H7z"/></svg>
-                    <span>Book a Call</span>
+                    <span>Book a Free 30' Session</span>
                 </a>
             </div>
         </div>
@@ -152,11 +152,30 @@
         </div>
 
     </div>
-
 </section>
 
 <!-- Portfolio Courses ----------------------------------------- -->
 <section id="portfolio" class="section-container">
+
+    <div class="course-filters-header">
+        <p class="course-filters-eyebrow">Βρες το πρόγραμμα που σου ταιριάζει</p>
+        <h3 class="course-filters-title">Ποιος είναι ο στόχος σου;</h3>
+        <div class="course-filters-divider"></div>
+    </div>
+    <div class="course-filters" role="group" aria-label="Φίλτρο μαθημάτων">
+        <button class="filter-btn active" data-filter="all" id="filter-all">
+            <span class="filter-btn-icon">✦</span>
+            <span>Όλα τα μαθήματα</span>
+        </button>
+        <button class="filter-btn" data-filter="personal" id="filter-personal">
+            <span class="filter-btn-icon">✨</span>
+            <span>Θέλω να μάθω makeup για μένα</span>
+        </button>
+        <button class="filter-btn" data-filter="artist" id="filter-artist">
+            <span class="filter-btn-icon">🎨</span>
+            <span>Είμαι ή θέλω να γίνω Makeup Artist</span>
+        </button>
+    </div>
     <h2 class="section-title">Courses</h2>
     <div id="course-modal">
         <div class="modal-container">
@@ -165,11 +184,7 @@
         </div>
     </div>
     <!-- Course Filters -->
-    <div class="course-filters">
-        <button class="filter-btn active" data-filter="all">✨ Όλα τα μαθήματα</button>
-        <button class="filter-btn" data-filter="personal">💄 Θέλω να μάθω makeup για μένα</button>
-        <button class="filter-btn" data-filter="artist">🎨 Είμαι ή θέλω να γίνω Makeup Artist</button>
-    </div>
+
     <div class="portfolio-items">
         <!-- Makeup from Zero -->
         <div class="portfolio-card" data-goal="artist">
@@ -230,7 +245,7 @@
                 </a>
                 <a class="modal-contact-action-btn modal-contact-action-btn--calendly" href="https://calendly.com/elena81eaf" target="_blank" rel="noopener" aria-label="Book via Calendly">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V9h14v11ZM7 11h5v5H7z"/></svg>
-                    <span>Book a Call</span>
+                    <span>Book a Free 30' Session</span>
                 </a>
             </div>
         </div>
@@ -293,7 +308,7 @@
                 </a>
                 <a class="modal-contact-action-btn modal-contact-action-btn--calendly" href="https://calendly.com/elena81eaf" target="_blank" rel="noopener" aria-label="Book via Calendly">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V9h14v11ZM7 11h5v5H7z"/></svg>
-                    <span>Book a Call</span>
+                    <span>Book a Free 30' Session</span>
                 </a>
             </div>
         </div>
@@ -360,16 +375,16 @@
                 </a>
                 <a class="modal-contact-action-btn modal-contact-action-btn--calendly" href="https://calendly.com/elena81eaf" target="_blank" rel="noopener" aria-label="Book via Calendly">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V9h14v11ZM7 11h5v5H7z"/></svg>
-                    <span>Book a Call</span>
+                    <span>Book a Free 30' Session</span>
                 </a>
             </div>
         </div>
 
         <!-- Custom Makeup Experience -->
-        <div class="portfolio-card" data-goal="personal">
+        <div class="portfolio-card" data-goal="personal artist">
             <h3 class="portfolio-card-title">Custom Makeup Experience</h3>
             <img src="imgs/courses/personalmakeup.jpeg" alt="Personal Makeup Experience" class="course-image">
-            <p class="portfolio-card-description">Εξατομικευμένη εκπαίδευση μακιγιάζ, σχεδιασμένη γύρω από τους δικούς σου στόχους. </p>
+            <p class="portfolio-card-description">Εξατομικευμένη εκπαίδευση μακιγιάζ, σχεδιασμένη γύρω από τους δικούς σου ανάγκες. </p>
 
             <h4 class="course-title">Σε ποιους απευθύνεται;</h4>
             <ul class="course-content-list">
@@ -407,7 +422,7 @@
                 </a>
                 <a class="modal-contact-action-btn modal-contact-action-btn--calendly" href="https://calendly.com/elena81eaf" target="_blank" rel="noopener" aria-label="Book via Calendly">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V9h14v11ZM7 11h5v5H7z"/></svg>
-                    <span>Book a Call</span>
+                    <span>Book a Free 30' Session</span>
                 </a>
             </div>
         </div>
@@ -491,27 +506,27 @@
                     </a>
                     <a class="modal-contact-action-btn modal-contact-action-btn--calendly" href="https://calendly.com/elena81eaf" target="_blank" rel="noopener" aria-label="Book via Calendly">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V9h14v11ZM7 11h5v5H7z"/></svg>
-                        <span>Book a Call</span>
+                        <span>Book a Free 30' Session</span>
                     </a>
                 </div>
             </div>
         </div>
 
         <!-- Beauty Strategy Session -->
-        <div class="portfolio-card" data-goal="personal">
+        <div class="portfolio-card" data-goal="personal artist">
                 <h3 class="portfolio-card-title">Beauty Strategy Session</h3>
             <img src="imgs/courses/beautyBusinesStrategy.jpeg" alt="Beauty Business Strategy Session" class="course-image">
-            <p class="portfolio-card-description">Απόκτησε ξεκάθαρη στρατηγική για να αναπτύξεις την καριέρα ή την επιχείρησή σου στον χώρο της ομορφιάς.</p>
-            <p class="portfolio-card-description">Μέσα από μια εξατομικευμένη συνεδρία αναλύουμε πού βρίσκεσαι σήμερα, πού θέλεις να φτάσεις και δημιουργούμε ένα ρεαλιστικό πλάνο δράσης.</p>
+            <p class="portfolio-card-description">Μια εξατομικευμένη συνεδρία στρατηγικής και καθοδήγησης, σχεδιασμένη για να σε βοηθήσει να ξεκαθαρίσεις τους στόχους σου, να αναγνωρίσεις τις ευκαιρίες που έχεις μπροστά σου και να δημιουργήσεις ένα ξεκάθαρο πλάνο δράσης για την επαγγελματική σου εξέλιξη στον χώρο της ομορφιάς.
+            </p>
 
             <h4 class="course-title">Η συνεδρία είναι ιδανική για όσους:</h4>
             <ul class="course-content-list">
-                <li>Θέλουν να αλλάξουν καριέρα και να κάνουν τα πρώτα τους επαγγελματικά βήματα</li>
-                <li>Νιώθουν μπερδεμένοι για το επόμενο βήμα τους</li>
-                <li>Makeup Artists που θέλουν να αυξήσουν το πελατολόγιο τους</li>
-                <li>Επαγγελματίες αισθητικής που θέλουν να εξελίξουν τις υπηρεσίες τους</li>
-                <li>Beauty professionals που νιώθουν ότι έχουν κολλήσει και χρειάζονται ξεκάθαρη κατεύθυνση</li>
-                <li>Θέλουν να χτίσουν την επιχείρησή τους με ξεκάθαρη στρατηγική και κατεύθυνση</li>
+                <li>Θέλουν να ξεκινήσουν ή να αλλάξουν καριέρα στον χώρο της ομορφιάς.</li>
+                <li>Σκέφτονται να ασχοληθούν επαγγελματικά ή part-time με το makeup.</li>
+                <li>Νιώθουν μπερδεμένοι και χρειάζονται καθοδήγηση για το επόμενο βήμα τους.</li>
+                <li>Αναζητούν νέες επαγγελματικές ευκαιρίες.</li>
+                <li>Νιώθουν ότι έχουν κολλήσει επαγγελματικά και θέλουν να εξελιχθούν.</li>
+                <li>Θέλουν ένα ξεκάθαρο και εξατομικευμένο πλάνο δράσης.</li>
             </ul>
 
             <h4 class="course-title">Τι θα δουλέψουμε μαζί;</h4>
@@ -525,10 +540,11 @@
 
             <h4 class="course-title">Τι κερδίζεις από τη συνεδρία;</h4>
             <ul class="course-content-list">
-                <li>Αποκτάς ξεκάθαρη εικόνα της κατάστασης στην οποία βρίσκεσαι.</li>
-                <li>Καθορίζουμε μα σαφήνεια τους στόχους σου.</li>
-                <li>Χτίζουμε στρατηγικό πλάνο δράσης</li>
-                <li>Ορίζουμε συγκεκριμένα επόμενα βήματα.</li>
+                <li>Ξεκάθαρη εικόνα για το σημείο στο οποίο βρίσκεσαι σήμερα.</li>
+                <li>Σαφή κατεύθυνση για τα επόμενα βήματά σου.</li>
+                <li>Ένα εξατομικευμένο πλάνο δράσης, προσαρμοσμένο στους στόχους σου.</li>
+                <li> Μεγαλύτερη αυτοπεποίθηση στις αποφάσεις και τις επόμενες κινήσεις σου.</li>
+                <li>Πρακτική καθοδήγηση που μπορείς να εφαρμόσεις άμεσα.</li>
             </ul>
 
             <h4 class="course-title">Διάρκεια</h4>
@@ -547,7 +563,7 @@
                 </a>
                 <a class="modal-contact-action-btn modal-contact-action-btn--calendly" href="https://calendly.com/elena81eaf" target="_blank" rel="noopener" aria-label="Book via Calendly">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V9h14v11ZM7 11h5v5H7z"/></svg>
-                    <span>Book a Call</span>
+                    <span>Book a Free 30' Session</span>
                 </a>
             </div>
         </div>
