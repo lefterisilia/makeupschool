@@ -381,8 +381,8 @@ const imageNames = [
     '503483906_2103951930079511_7799135318677570974_n.webp',
     '504733398_18506580940047858_771023618499306690_n.webp',
     'IMG_4853.webp',
-   'IMG_8711.webp', 'IMG_8709.webp','IMG_8980.webp',
-      'IMG_8716.webp', 'IMG_8721.webp',
+    'IMG_8711.webp', 'IMG_8709.webp','IMG_8980.webp',
+    'IMG_8716.webp', 'IMG_8721.webp',
     'IMG_8729.webp', 'IMG_9130.webp','IMG_8997.webp',
     'IMG_8770.webp', 'IMG_8784.webp', 'IMG_8809.webp',
     'IMG_8965.webp', 'IMG_8970.webp',
@@ -468,7 +468,7 @@ window.addEventListener('scroll', function() {
 });
 
 
-    // Contact form submission
+// Contact form submission
 document.getElementById('contact-form').addEventListener('submit', async function (e) {
     e.preventDefault();
 
